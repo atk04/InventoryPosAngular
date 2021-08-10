@@ -5,3 +5,10 @@
 
 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+button:focus,input[type="submit"]:focus{
+  outline: none;
+}
+.row>label{
+  padding-top: 0.8em;
+  padding-left:1em;
+}
