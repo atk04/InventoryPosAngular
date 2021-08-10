@@ -16,7 +16,10 @@ const routes: Routes = [
       {
         path: 'sample-page',
         loadChildren: () => import('./demo/pages/sample-page/sample-page.module').then(module => module.SamplePageModule)
-      }
+      },
+      {
+        path:'category-page',loadChildren:()=>import('./category/category.module').then(module=>module.CategoryModule)
+      },
     ]
   },
   {
