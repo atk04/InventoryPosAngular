@@ -39,6 +39,13 @@ const NavigationItems = [
         url: '/sample-page',
         classes: 'nav-item',
         icon: 'feather icon-sidebar'
+      },{
+        id: 'category-page',
+        title: 'Category',
+        type: 'item',
+        url: '/category-page',
+        classes: 'nav-item',
+        icon: 'feather icon-list'
       },
       {
         id: 'menu-level',
