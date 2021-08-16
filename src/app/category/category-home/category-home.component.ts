@@ -62,7 +62,7 @@ export class CategoryHomeComponent implements OnInit {
     }
   }
 
-  productCategories: ProductCategory[];
+  productCategories: ProductCategory[]=[];
   constructor(
     private formBuilder: FormBuilder,
     private productCategoryService: ProductCategoryService,

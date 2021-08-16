@@ -52,30 +52,40 @@
               </tr>
               </thead>
               <tbody>
+<ng-container *ngIf="productCategories.length!=0;else second">
+  <tr *ngFor="let tempProductCategory of productCategories">
+    <td>{{tempProductCategory.id}}</td>
+    <td>{{tempProductCategory.categoryName}}</td>
+    <td>
+      <button class="btn-block" mat-raised-button color="accent">Edit</button>
+    </td>
+    <td>
+      <button class="btn-block" mat-raised-button color="warn">Delete</button>
+    </td>
 
-              <tr *ngFor="let tempProductCategory of productCategories">
-                <td>{{tempProductCategory.id}}</td>
-                <td>{{tempProductCategory.categoryName}}</td>
-                <td>
-                  <button class="btn-block" mat-raised-button color="accent">Edit</button>
-                </td>
-                <td>
-                  <button class="btn-block" mat-raised-button color="warn">Delete</button>
-                </td>
+  </tr>
+</ng-container>
+<ng-template #second>
+  <tr>
+    <td colspan="4" style="text-align: center;">There is no category data.</td>
+  </tr>
+</ng-template>
 
-              </tr>
+
+
+
 
               </tbody>
             </table>
           </div>
 
-
+          <ng-container *ngIf="productCategories.length!=0">
           <mat-paginator [length]="length"
                [pageSize]="pageSize"
                [pageSizeOptions]="pageSizeOptions"
                (page)="onPaginate($event)">
 </mat-paginator>
-
+</ng-container>
 
         </div>
       </div>
