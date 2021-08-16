@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewEncapsulation } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -11,12 +11,32 @@ import { ProductCategory } from 'src/app/common/product-category';
 import { ProductCategoryApicallService } from 'src/app/services/product-category-apicall.service';
 import { ProductCategoryService } from 'src/app/services/product-category.service';
 import { InventoryPos } from 'src/app/validators/inventory-pos';
+import {SnotifyPosition, SnotifyService, SnotifyToastConfig} from 'ng-snotify';
 @Component({
   selector: 'app-category-home',
   templateUrl: './category-home.component.html',
   styleUrls: ['./category-home.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CategoryHomeComponent implements OnInit {
+  //Snotify Message
+  style = 'material';
+  title = 'Alert Message';
+  body = 'text';
+  timeout = 1500;
+  position: SnotifyPosition = SnotifyPosition.rightBottom;
+  progressBar = true;
+  closeClick = true;
+  newTop = true;
+  filterDuplicates = false;
+  backdrop = -1;
+  dockMax = 8;
+  blockMax = 6;
+  pauseHover = true;
+  titleMaxLength = 50;
+  bodyMaxLength = 80;
+
+
   // MatPaginator Output
   pageEvent: PageEvent;
 
@@ -46,7 +66,8 @@ export class CategoryHomeComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private productCategoryService: ProductCategoryService,
-    private productCategoryApiCallService: ProductCategoryApicallService
+    private productCategoryApiCallService: ProductCategoryApicallService,
+    private snotifyService: SnotifyService
   ) {}
 
   categoryFormGroup: FormGroup;
@@ -63,30 +84,17 @@ export class CategoryHomeComponent implements OnInit {
     this.listProductCategories();
   }
 
+
+
+
+  //End Snotify Message Config
+
   get categoryName() {
     return this.categoryFormGroup.get('categoryName');
   }
 
 
-  onSubmit() {
-    if (this.categoryFormGroup.invalid) {
-      this.categoryFormGroup.markAllAsTouched();
-      return;
-    }
-    this.category.categoryName =
-      this.categoryFormGroup.controls['categoryName'].value;
-    this.productCategoryApiCallService
-      .saveProductCategory(this.category)
-      .subscribe({
-        next: (response) => {
-          alert(`${response.categoryName}`);
-          this.listProductCategories()
-        },
-        error: (err) => {
-          alert(`There was an error: ${err.message}`);
-        },
-      });
-  }
+
 
 
 
@@ -106,5 +114,70 @@ export class CategoryHomeComponent implements OnInit {
     };
   }
 
+
+
+  //Snotify Alert
+  getConfig(): SnotifyToastConfig {
+    this.snotifyService.setDefaults({
+      global: {
+        newOnTop: this.newTop,
+        maxAtPosition: this.blockMax,
+        maxOnScreen: this.dockMax,
+        // @ts-ignore
+        filterDuplicates: this.filterDuplicates
+      }
+    });
+    return {
+      bodyMaxLength: this.bodyMaxLength,
+      titleMaxLength: this.titleMaxLength,
+      backdrop: this.backdrop,
+      position: this.position,
+      timeout: this.timeout,
+      showProgressBar: this.progressBar,
+      closeOnClick: this.closeClick,
+      pauseOnHover: this.pauseHover
+    };
+  }
+
+  //Snotify Alert Methods
+  onSuccess() {
+    this.snotifyService.success(this.body, this.title, this.getConfig());
+  }
+  onInfo() {
+    this.snotifyService.info(this.body, this.title, this.getConfig());
+  }
+  onError() {
+    this.snotifyService.error(this.body, this.title, this.getConfig());
+  }
+  onWarning() {
+    this.snotifyService.warning(this.body, this.title, this.getConfig());
+  }
+
+
+  onSubmit() {
+    if (this.categoryFormGroup.invalid) {
+      this.categoryFormGroup.markAllAsTouched();
+      return;
+    }
+    this.category.categoryName =
+      this.categoryFormGroup.controls['categoryName'].value;
+    this.productCategoryApiCallService
+      .saveProductCategory(this.category)
+      .subscribe({
+        next: (response) => {
+          this.title="Add Success";
+          this.body="Category: "+`${response.categoryName}`;
+          this.onSuccess();
+
+          this.listProductCategories()
+        },
+        error: (err) => {
+          this.title=`Error`;
+          this.body="Add Fail";
+          this.onError();
+          this.listProductCategories()
+        },
+      });
+  }
 
 }

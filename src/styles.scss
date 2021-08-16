@@ -2,7 +2,7 @@
 
 /* SCSS */
 @import "scss/style";
-
+@import "~ng-snotify/styles/material";
 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 button:focus,input[type="submit"]:focus{

@@ -10,7 +10,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-
+import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
 
 
 const materialModules = [
@@ -18,7 +18,7 @@ const materialModules = [
   MatIconModule,
   MatTableModule,
   MatPaginatorModule,
-  MatSortModule
+  MatSortModule,
 ];
 
 
@@ -28,8 +28,10 @@ const materialModules = [
     CommonModule,
     CategoryRoutingModule,
     SharedModule,
-    materialModules
+    materialModules,
+    SnotifyModule
   ],
-  schemas:[CUSTOM_ELEMENTS_SCHEMA]
+  schemas:[CUSTOM_ELEMENTS_SCHEMA],
+  providers: [{ provide: 'SnotifyToastConfig', useValue: ToastDefaults }, SnotifyService]
 })
 export class CategoryModule { }

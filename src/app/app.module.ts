@@ -42,7 +42,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     NavSearchComponent,
     NavRightComponent,
     ConfigurationComponent,
-    ToggleFullScreenDirective
+    ToggleFullScreenDirective,
   ],
   imports: [
     BrowserModule,
@@ -54,7 +54,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     NgbButtonsModule,
     NgbTabsetModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [NavigationItem],
   bootstrap: [AppComponent]
