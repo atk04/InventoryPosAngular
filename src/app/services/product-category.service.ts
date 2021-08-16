@@ -19,6 +19,13 @@ private categoryUrl='http://localhost:8080/api/product-category';
     const searchUrl=`${this.categoryUrl}?page=${thePage}&size=${thePageSize}`;
     return this.httpClient.get<GetResponseProductCategory>(searchUrl);
   }
+
+  getProductCategoryUpdate(theCategoryId:number):Observable<ProductCategory[]>{
+    const searchUrl=`${this.categoryUrl}/${theCategoryId}`;
+    return this.httpClient.get<GetResponseProductCategory>(searchUrl).pipe(
+      map(response=>response._embedded.productCategory)
+    )
+  }
 }
 
 
@@ -33,3 +40,4 @@ interface GetResponseProductCategory{
     number: number
   }
 }
+

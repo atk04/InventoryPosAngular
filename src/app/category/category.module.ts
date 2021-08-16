@@ -11,6 +11,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
+import { CategoryUpdateComponent } from '../category/category-update/category-update.component';
 
 
 const materialModules = [
@@ -23,7 +24,7 @@ const materialModules = [
 
 
 @NgModule({
-  declarations: [CategoryHomeComponent],
+  declarations: [CategoryHomeComponent, CategoryUpdateComponent],
   imports: [
     CommonModule,
     CategoryRoutingModule,

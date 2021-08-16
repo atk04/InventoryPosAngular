@@ -37,6 +37,8 @@ export class CategoryHomeComponent implements OnInit {
   bodyMaxLength = 80;
 
 
+
+
   // MatPaginator Output
   pageEvent: PageEvent;
 

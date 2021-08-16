@@ -9,8 +9,12 @@ import { Category } from '../common/category';
 })
 export class ProductCategoryApicallService {
 private createProductCategoryUrl='http://localhost:8080/api/category/create';
+private updateProductCategoryUrl='http://localhost:8080/api/category/update';
   constructor(private httpClient:HttpClient) { }
   saveProductCategory(category:Category):Observable<any>{
 return this.httpClient.post(this.createProductCategoryUrl,category);
   }
+  updateProductCategory(category:Category):Observable<any>{
+    return this.httpClient.put(this.updateProductCategoryUrl,category);
+      }
 }
