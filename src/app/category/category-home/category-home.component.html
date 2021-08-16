@@ -1,11 +1,11 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="Category Form">
+    <app-card cardTitle="Category">
       <div class="row">
         <div class="col-md-6">
           <form [formGroup]="categoryFormGroup" (ngSubmit)="onSubmit()">
           <div class="row">
-            <label for="category">Category</label>
+            <label for="category">Category Name</label>
             <div class="col-sm-8">
               <input id="category"
                 class="form-control"
@@ -30,7 +30,7 @@
 
 
           <div class="row mt-2">
-            <div class="col-sm-2">&nbsp;</div>
+            <div class="col-sm-3">&nbsp;</div>
             <div class="col-sm-8">
               <button type="submit" mat-raised-button color="warning">Save</button>
             </div>
