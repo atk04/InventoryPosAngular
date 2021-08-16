@@ -18,75 +18,78 @@
 
                 <div *ngIf="categoryName.errors.required || categoryName.errors.notOnlyWhitespace">
                     Category Name is required
-                </div>
+                  </div>
 
-                <div *ngIf="categoryName.errors.minlength">
+                  <div *ngIf="categoryName.errors.minlength">
                     Category Name must be at least 2 characters long
+                  </div>
                 </div>
-
+              </div>
             </div>
-            </div>
-          </div>
-
 
           <div class="row mt-2">
             <div class="col-sm-3">&nbsp;</div>
             <div class="col-sm-8">
               <button type="submit" mat-raised-button color="warning">Save</button>
             </div>
-          </div>
-        </form>
-        <br>
+</div>
+          </form>
+          <br />
         </div>
 
         <div class="col-md-6">
-
           <div class="table-responsive">
             <table class="table">
               <thead>
-              <tr>
-                <th>#</th>
-                <th>Category</th>
-                <th colspan="2" class="text-center">Action</th>
-
-              </tr>
+                <tr>
+                  <th>#</th>
+                  <th>Category</th>
+                  <th colspan="2" class="text-center">Action</th>
+                </tr>
               </thead>
               <tbody>
-<ng-container *ngIf="productCategories.length!=0;else second">
-  <tr *ngFor="let tempProductCategory of productCategories">
-    <td>{{tempProductCategory.id}}</td>
-    <td>{{tempProductCategory.categoryName}}</td>
-    <td>
-      <button class="btn-block" mat-raised-button color="accent">Edit</button>
-    </td>
-    <td>
-      <button class="btn-block" mat-raised-button color="warn">Delete</button>
-    </td>
-
-  </tr>
-</ng-container>
-<ng-template #second>
-  <tr>
-    <td colspan="4" style="text-align: center;">There is no category data.</td>
-  </tr>
-</ng-template>
-
-
-
-
-
+                <ng-container
+                  *ngIf="productCategories.length != 0; else second"
+                >
+                  <tr *ngFor="let tempProductCategory of productCategories">
+                    <td>{{ tempProductCategory.id }}</td>
+                    <td>{{ tempProductCategory.categoryName }}</td>
+                    <td>
+                      <a routerLink="/category-page/{{tempProductCategory.id}}"
+                        class="btn-block"
+                        mat-raised-button
+                        color="accent"
+                      >
+                        Edit
+                    </a>
+                    </td>
+                    <td>
+                      <button class="btn-block" mat-raised-button color="warn">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </ng-container>
+                <ng-template #second>
+                  <tr>
+                    <td colspan="4" style="text-align: center">
+                      There is no category data.
+                    </td>
+                  </tr>
+                </ng-template>
               </tbody>
             </table>
           </div>
 
-          <ng-container *ngIf="productCategories.length!=0">
-          <mat-paginator [length]="length"
-               [pageSize]="pageSize"
-               [pageSizeOptions]="pageSizeOptions"
-               (page)="onPaginate($event)">
-</mat-paginator>
-</ng-container>
-
+          <ng-container *ngIf="productCategories.length != 0">
+            <mat-paginator
+              [length]="length"
+              [pageSize]="pageSize"
+              [pageSizeOptions]="pageSizeOptions"
+              (page)="onPaginate($event)"
+            >
+            </mat-paginator>
+          </ng-container>
         </div>
       </div>
     </app-card>
