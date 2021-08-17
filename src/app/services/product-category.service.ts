@@ -20,11 +20,9 @@ private categoryUrl='http://localhost:8080/api/product-category';
     return this.httpClient.get<GetResponseProductCategory>(searchUrl);
   }
 
-  getProductCategoryUpdate(theCategoryId:number):Observable<ProductCategory[]>{
+  getProductCategoryUpdate(theCategoryId:number):Observable<GetResponseProductCategoryUpdate>{
     const searchUrl=`${this.categoryUrl}/${theCategoryId}`;
-    return this.httpClient.get<GetResponseProductCategory>(searchUrl).pipe(
-      map(response=>response._embedded.productCategory)
-    )
+    return this.httpClient.get<GetResponseProductCategoryUpdate>(searchUrl);
   }
 }
 
@@ -38,6 +36,12 @@ interface GetResponseProductCategory{
     totalElements: number,
     totalPages: number,
     number: number
+  }
+}
+
+interface GetResponseProductCategoryUpdate{
+  "_embedded": {
+    "productCategory": ProductCategory[];
   }
 }
 

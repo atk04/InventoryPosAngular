@@ -91,6 +91,8 @@ export class CategoryHomeComponent implements OnInit {
 
   //End Snotify Message Config
 
+
+  //categoryName Getter for validation
   get categoryName() {
     return this.categoryFormGroup.get('categoryName');
   }

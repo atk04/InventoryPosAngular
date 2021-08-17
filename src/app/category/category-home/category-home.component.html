@@ -4,19 +4,31 @@
       <div class="row">
         <div class="col-md-6">
           <form [formGroup]="categoryFormGroup" (ngSubmit)="onSubmit()">
-          <div class="row">
-            <label for="category">Category Name</label>
-            <div class="col-sm-8">
-              <input id="category"
-                class="form-control"
-                type="text"
-                placeholder="Enter Category"
-                formControlName="categoryName"
-              />
+            <div class="row">
+              <label for="category">Category Name</label>
+              <div class="col-sm-8">
+                <input
+                  id="category"
+                  class="form-control"
+                  type="text"
+                  placeholder="Enter Category"
+                  formControlName="categoryName"
+                />
 
-              <div class="row" *ngIf="categoryName.invalid && (categoryName.dirty || categoryName.touched)" class="alert alert-danger mt-1">
-
-                <div *ngIf="categoryName.errors.required || categoryName.errors.notOnlyWhitespace">
+                <div
+                  class="row"
+                  *ngIf="
+                    categoryName.invalid &&
+                    (categoryName.dirty || categoryName.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div
+                    *ngIf="
+                      categoryName.errors.required ||
+                      categoryName.errors.notOnlyWhitespace
+                    "
+                  >
                     Category Name is required
                   </div>
 
@@ -27,12 +39,14 @@
               </div>
             </div>
 
-          <div class="row mt-2">
-            <div class="col-sm-3">&nbsp;</div>
-            <div class="col-sm-8">
-              <button type="submit" mat-raised-button color="warning">Save</button>
+            <div class="row mt-2">
+              <div class="col-sm-3">&nbsp;</div>
+              <div class="col-sm-8">
+                <button type="submit" mat-raised-button color="warning">
+                  Save
+                </button>
+              </div>
             </div>
-</div>
           </form>
           <br />
         </div>
@@ -55,13 +69,14 @@
                     <td>{{ tempProductCategory.id }}</td>
                     <td>{{ tempProductCategory.categoryName }}</td>
                     <td>
-                      <a routerLink="/category-page/{{tempProductCategory.id}}"
+                      <a
+                        routerLink="/category-page/{{ tempProductCategory.id }}"
                         class="btn-block"
                         mat-raised-button
                         color="accent"
                       >
                         Edit
-                    </a>
+                      </a>
                     </td>
                     <td>
                       <button class="btn-block" mat-raised-button color="warn">
