@@ -65,8 +65,8 @@
                 <ng-container
                   *ngIf="productCategories.length != 0; else second"
                 >
-                  <tr *ngFor="let tempProductCategory of productCategories">
-                    <td>{{ tempProductCategory.id }}</td>
+                  <tr *ngFor="let tempProductCategory of productCategories;let indexOfelement=index;">
+                    <td>{{ indexOfelement+1 }}</td>
                     <td>{{ tempProductCategory.categoryName }}</td>
                     <td>
                       <a
