@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -11,12 +11,16 @@ import { ProductCategory } from 'src/app/common/product-category';
 import { ProductCategoryApicallService } from 'src/app/services/product-category-apicall.service';
 import { ProductCategoryService } from 'src/app/services/product-category.service';
 import { InventoryPos } from 'src/app/validators/inventory-pos';
-import {SnotifyPosition, SnotifyService, SnotifyToastConfig} from 'ng-snotify';
+import {
+  SnotifyPosition,
+  SnotifyService,
+  SnotifyToastConfig,
+} from 'ng-snotify';
 @Component({
   selector: 'app-category-home',
   templateUrl: './category-home.component.html',
   styleUrls: ['./category-home.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class CategoryHomeComponent implements OnInit {
   //Snotify Message
@@ -35,9 +39,6 @@ export class CategoryHomeComponent implements OnInit {
   pauseHover = true;
   titleMaxLength = 50;
   bodyMaxLength = 80;
-
-
-
 
   // MatPaginator Output
   pageEvent: PageEvent;
@@ -64,7 +65,7 @@ export class CategoryHomeComponent implements OnInit {
     }
   }
 
-  productCategories: ProductCategory[]=[];
+  productCategories: ProductCategory[] = [];
   constructor(
     private formBuilder: FormBuilder,
     private productCategoryService: ProductCategoryService,
@@ -86,22 +87,12 @@ export class CategoryHomeComponent implements OnInit {
     this.listProductCategories();
   }
 
-
-
-
   //End Snotify Message Config
-
 
   //categoryName Getter for validation
   get categoryName() {
     return this.categoryFormGroup.get('categoryName');
   }
-
-
-
-
-
-
 
   listProductCategories() {
     this.productCategoryService
@@ -118,8 +109,6 @@ export class CategoryHomeComponent implements OnInit {
     };
   }
 
-
-
   //Snotify Alert
   getConfig(): SnotifyToastConfig {
     this.snotifyService.setDefaults({
@@ -128,8 +117,8 @@ export class CategoryHomeComponent implements OnInit {
         maxAtPosition: this.blockMax,
         maxOnScreen: this.dockMax,
         // @ts-ignore
-        filterDuplicates: this.filterDuplicates
-      }
+        filterDuplicates: this.filterDuplicates,
+      },
     });
     return {
       bodyMaxLength: this.bodyMaxLength,
@@ -139,7 +128,7 @@ export class CategoryHomeComponent implements OnInit {
       timeout: this.timeout,
       showProgressBar: this.progressBar,
       closeOnClick: this.closeClick,
-      pauseOnHover: this.pauseHover
+      pauseOnHover: this.pauseHover,
     };
   }
 
@@ -157,7 +146,6 @@ export class CategoryHomeComponent implements OnInit {
     this.snotifyService.warning(this.body, this.title, this.getConfig());
   }
 
-
   onSubmit() {
     if (this.categoryFormGroup.invalid) {
       this.categoryFormGroup.markAllAsTouched();
@@ -169,19 +157,28 @@ export class CategoryHomeComponent implements OnInit {
       .saveProductCategory(this.category)
       .subscribe({
         next: (response) => {
-          this.title="Add Success";
-          this.body="Category: "+`${response.categoryName}`;
+          this.title = 'Add Success';
+          this.body = 'Category: ' + `${response.categoryName}`;
           this.onSuccess();
 
-          this.listProductCategories()
+          this.listProductCategories();
         },
         error: (err) => {
-          this.title=`Error`;
-          this.body="Add Fail";
+          this.title = `Error`;
+          this.body = 'Add Fail';
           this.onError();
-          this.listProductCategories()
+          this.listProductCategories();
         },
       });
   }
-
+  onDelete(id: number) {
+    this.productCategoryApiCallService.deleteProductCategoryById(id).subscribe({
+      next: (response) => {
+        this.title = 'Delete Success';
+        this.body = 'Category: ' + `${response.message}`;
+        this.onSuccess();
+        this.listProductCategories();
+      }
+    });
+  }
 }
