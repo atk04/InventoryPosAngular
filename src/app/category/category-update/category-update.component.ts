@@ -64,7 +64,7 @@ export class CategoryUpdateComponent implements OnInit {
     });
 
     this.productCategoryService
-      .getProductCategoryUpdate(this.currentCategoryId)
+      .getProductCategoryById(this.currentCategoryId)
       .subscribe({
         next: (response) => {
           // this.productCategory=response._embedded.productCategory;
