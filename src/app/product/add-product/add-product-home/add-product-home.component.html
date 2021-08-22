@@ -16,7 +16,7 @@
             </div>
             <div class="form-group">
               <label for="exampleFormControlSelect1">Category Name</label>
-              <select formControlName="productCategoryId" class="form-control" id="exampleFormControlSelect1">
+              <select (change)="onChangeCategoryId($event.target.value)" formControlName="productCategoryId" class="form-control" id="exampleFormControlSelect1">
                 <option selected disabled>Select Category</option>
                 <option  *ngFor="let tempProductCategory of productCategories" [value]="tempProductCategory.id">{{tempProductCategory.categoryName}}</option>
               </select>
@@ -83,4 +83,7 @@
     </form>
     </app-card>
   </div>
+</div>
+<div class="row">
+  <ng-snotify></ng-snotify>
 </div>
