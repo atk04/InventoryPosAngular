@@ -102,6 +102,7 @@ export class CategoryHomeComponent implements OnInit {
 
   processResult() {
     return (data) => {
+      console.log(data)
       this.productCategories = data._embedded.productCategory;
       this.thePageNumber = data.page.number;
       this.pageSize = data.page.size;

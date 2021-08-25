@@ -8,18 +8,80 @@
               <tr>
                 <th>#</th>
                 <th>Product Name</th>
-                <th>Category Name</th>
+
                 <th>Purchase Price</th>
                 <th>Sale Price</th>
                 <th colspan="3" class="text-center">Action</th>
               </tr>
             </thead>
             <tbody>
-
+              <ng-container
+                  *ngIf="products.length != 0; else second"
+                >
+              <tr *ngFor="let tempProduct of products">
+                <td>{{ tempProduct.id }}</td>
+                <td>{{ tempProduct.name }}</td>
+                <td>{{ tempProduct.purchasePrice }}</td>
+                <td>{{ tempProduct.salePrice }}</td>
+                <td>
+                  <a
+                    routerLink="/product-list-page/{{
+                      tempProduct.id
+                    }}/viewProduct"
+                    class="btn-block"
+                    mat-raised-button
+                    color="primary"
+                  >
+                    View
+                  </a>
+                </td>
+                <td>
+                  <a
+                    routerLink="/product-list-page/{{ tempProduct.id }}"
+                    class="btn-block"
+                    mat-raised-button
+                    color="accent"
+                  >
+                    Edit
+                  </a>
+                </td>
+                <td>
+                  <button
+                    class="btn-block"
+                    mat-raised-button
+                    color="warn"
+                    (click)="onDelete(tempProduct.id)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              </ng-container>
+              <ng-template #second>
+                <tr>
+                  <td colspan="7" style="text-align: center">
+                    There is no product data.
+                  </td>
+                </tr>
+              </ng-template>
             </tbody>
           </table>
+
+          <ng-container *ngIf="products.length != 0">
+            <mat-paginator
+              [length]="length"
+              [pageSize]="pageSize"
+              [pageSizeOptions]="pageSizeOptions"
+              (page)="onPaginate($event)"
+            >
+            </mat-paginator>
+          </ng-container>
         </div>
+
+
+
       </div>
+
     </app-card>
   </div>
 </div>

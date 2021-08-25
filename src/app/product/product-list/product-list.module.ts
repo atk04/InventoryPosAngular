@@ -10,6 +10,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
+import { ProductUpdateComponent } from './product-update/product-update.component';
+import { ProductViewComponent } from './product-view/product-view.component';
 
 
 const materialModules = [
@@ -21,7 +23,7 @@ const materialModules = [
 ];
 
 @NgModule({
-  declarations: [ProductListHomeComponent],
+  declarations: [ProductListHomeComponent, ProductUpdateComponent, ProductViewComponent],
   imports: [
     CommonModule,
     ProductListRoutingModule,
