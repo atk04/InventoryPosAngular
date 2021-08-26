@@ -8,8 +8,14 @@ import { AddProduct } from '../common/add-product';
 })
 export class ProductApicallService {
 private  createProductUrl='http://localhost:8080/api/product/create';
+private deleteProductByIdUrl='http://localhost:8080/api/product/delete';
   constructor(private httpClient: HttpClient) { }
   saveProduct(addProduct:AddProduct):Observable<any>{
    return this.httpClient.post(this.createProductUrl,addProduct);
+  }
+
+  deleteProductById(id:number):Observable<any>{
+    const deleteUrl=`${this.deleteProductByIdUrl}?id=${id}`;
+    return this.httpClient.delete(deleteUrl);
   }
 }
