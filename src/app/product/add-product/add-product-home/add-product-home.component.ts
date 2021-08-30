@@ -16,6 +16,7 @@ import {
   SnotifyService,
   SnotifyToastConfig,
 } from 'ng-snotify';
+import { UploadFileValidators } from 'src/app/validators/upload-file-validators';
 
 @Component({
   selector: 'app-add-product-home',
@@ -23,6 +24,11 @@ import {
   styleUrls: ['./add-product-home.component.scss'],
 })
 export class AddProductHomeComponent implements OnInit {
+
+  ImageFile:ImageData;
+
+
+
   //Snotify Message
   style = 'material';
   title = 'Alert Message';
@@ -86,6 +92,9 @@ export class AddProductHomeComponent implements OnInit {
         Validators.minLength(2),
         InventoryPos.notOnlyWhitespace,
       ]),
+      productImage:new FormControl('',[
+        Validators.required,
+        UploadFileValidators.requiredFileType('png')])
     });
     this.listProductCategories();
   }
@@ -116,6 +125,10 @@ export class AddProductHomeComponent implements OnInit {
   get description() {
     return this.productFormGroup.get('description');
   }
+
+  get productImage(){
+    return this.productFormGroup.get('productImage');
+  }
   onChangeCategoryId(categoryId: number) {
     this.productCategoryService
       .getProductCategoryById(categoryId)
@@ -124,6 +137,32 @@ export class AddProductHomeComponent implements OnInit {
         this.SelectedCategory.categoryName = data['categoryName'];
       });
   }
+
+
+
+
+
+
+  //Image Dispaly on Add Product form
+  imageURL: string;
+
+  // Image Preview
+  showPreview(event) {
+    const file = (event.target as HTMLInputElement).files[0];
+    this.productFormGroup.patchValue({
+      productImage: file
+    });
+    this.productFormGroup.get('productImage').updateValueAndValidity()
+
+    // File Preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imageURL = reader.result as string;
+    }
+    reader.readAsDataURL(file)
+  }
+
+
 
 
 
@@ -166,10 +205,12 @@ export class AddProductHomeComponent implements OnInit {
 
 
   onSubmit() {
-    if(this.productFormGroup.invalid){
-      this.productFormGroup.markAllAsTouched();
-      return;
-    }
+    // if(this.productFormGroup.invalid){
+    //   this.productFormGroup.markAllAsTouched();
+    //   return;
+    // }
+
+// console.log(this.productFormGroup);
 
     this.product.name = this.productFormGroup.controls.name.value;
     this.product.purchasePrice =
@@ -178,10 +219,21 @@ export class AddProductHomeComponent implements OnInit {
     this.product.stock = +this.productFormGroup.controls.stock.value;
     this.product.description = this.productFormGroup.controls.description.value;
 
+   // console.log(this.product.productImage)
+this.ImageFile=this.productFormGroup.controls.productImage.value;
     this.addProduct.category = this.SelectedCategory;
     this.addProduct.product = this.product;
 
-    this.productApiCallService.saveProduct(this.addProduct).subscribe({
+    var formData: any = new FormData();
+    formData.append("productImage",this.ImageFile)
+
+    formData.append("createProductRequest",
+    new Blob([JSON
+      .stringify(this.addProduct)], {
+      type: 'application/json'
+    }));
+
+    this.productApiCallService.saveProduct(formData).subscribe({
       next: (response) => {
         this.title = 'Add Success';
         this.body = 'Product: ' + `${response.name}`;

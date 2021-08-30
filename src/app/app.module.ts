@@ -43,6 +43,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     NavRightComponent,
     ConfigurationComponent,
     ToggleFullScreenDirective,
+
   ],
   imports: [
     BrowserModule,
