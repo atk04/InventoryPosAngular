@@ -205,12 +205,10 @@ export class AddProductHomeComponent implements OnInit {
 
 
   onSubmit() {
-    // if(this.productFormGroup.invalid){
-    //   this.productFormGroup.markAllAsTouched();
-    //   return;
-    // }
-
-// console.log(this.productFormGroup);
+    if(this.productFormGroup.invalid){
+      this.productFormGroup.markAllAsTouched();
+      return;
+    }
 
     this.product.name = this.productFormGroup.controls.name.value;
     this.product.purchasePrice =
