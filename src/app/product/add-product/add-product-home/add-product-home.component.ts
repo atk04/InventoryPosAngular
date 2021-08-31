@@ -94,7 +94,7 @@ export class AddProductHomeComponent implements OnInit {
       ]),
       productImage:new FormControl('',[
         Validators.required,
-        UploadFileValidators.requiredFileType('png')])
+        UploadFileValidators.requiredFileType('jpg')])
     });
     this.listProductCategories();
   }
