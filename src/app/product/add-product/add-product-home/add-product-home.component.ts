@@ -236,7 +236,7 @@ this.ImageFile=this.productFormGroup.controls.productImage.value;
     this.productApiCallService.saveProduct(formData).subscribe({
       next: (response) => {
         this.title = 'Add Success';
-        this.body = 'Product: ' + `${response.name}`;
+        this.body = 'Product: ' + `${response.message}`;
         this.onSuccess();
       },
     });
