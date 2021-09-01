@@ -1,7 +1,11 @@
 <div class="row">
   <div class="col-sm-12">
     <app-card cardTitle="Add Product">
-      <form [formGroup]="productFormGroup" enctype="multipart/form-data" (ngSubmit)="onSubmit()">
+      <form
+        [formGroup]="productFormGroup"
+        enctype="multipart/form-data"
+        (ngSubmit)="onSubmit()"
+      >
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
@@ -155,43 +159,36 @@
               </div>
             </div>
 
+            <app-image-upload
+              formControlName="productImage"
+              (change)="showPreview($event)"
+            ></app-image-upload>
 
-                <app-file-upload
-                  formControlName="productImage"
-                  (change)="showPreview($event)"
-                ></app-file-upload>
-                <div
-                  *ngIf="
-                    productImage.invalid &&
-                      (productImage.dirty || productImage.touched);
-                    else second
-                  "
-                  class="alert alert-danger form-group"
-                >
-                  <div
-                    *ngIf="
-                      productImage.errors.required ||
-                      productImage.errors.requiredFileType
-                    "
-                  >
-                    Only JPG
-                  </div>
-                </div>
+            <div
+              *ngIf="
+                productImage.invalid &&
+                  (productImage.dirty || productImage.touched);
+                else second
+              "
+              class="alert alert-danger form-group"
+            >
+              <div
+                *ngIf="
+                  productImage.errors.required ||
+                  productImage.errors.requiredFileType
+                "
+              >
+                Only JPG
+              </div>
+            </div>
 
-
-
-                <ng-template #second>
-
-                    <img style="width: auto;height:10em;display: inline-block;"
-                      [src]="imageURL"
-                      [alt]="productFormGroup.value.productImage"
-                    />
-
-                </ng-template>
-
-
-
-
+            <ng-template #second>
+              <img
+                style="width: auto; height: 10em; display: inline-block"
+                [src]="imageURL"
+                [alt]="productFormGroup.value.productImage"
+              />
+            </ng-template>
           </div>
         </div>
       </form>
