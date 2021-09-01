@@ -10,7 +10,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
-import { FileUploadComponent } from 'src/app/components/file-upload/file-upload.component';
+
 
 
 
@@ -23,7 +23,7 @@ const materialModules = [
 ];
 
 @NgModule({
-  declarations: [AddProductHomeComponent,FileUploadComponent],
+  declarations: [AddProductHomeComponent],
   imports: [
     CommonModule,
     AddProductRoutingModule,
