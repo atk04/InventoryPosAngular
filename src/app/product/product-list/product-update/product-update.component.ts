@@ -7,12 +7,21 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Product } from 'src/app/common/product';
 import { ProductCategory } from 'src/app/common/product-category';
 import { ProductList } from 'src/app/common/product-list';
+import { UpdateProduct } from 'src/app/common/update-product';
+import { ProductApicallService } from 'src/app/services/product-apicall.service';
 import { ProductCategoryService } from 'src/app/services/product-category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { InventoryPos } from 'src/app/validators/inventory-pos';
+import {
+  SnotifyPosition,
+  SnotifyService,
+  SnotifyToastConfig,
+} from 'ng-snotify';
 import { UploadFileValidators } from 'src/app/validators/upload-file-validators';
+import { Products } from 'src/app/common/products';
 
 @Component({
   selector: 'app-product-update',
@@ -20,6 +29,26 @@ import { UploadFileValidators } from 'src/app/validators/upload-file-validators'
   styleUrls: ['./product-update.component.scss'],
 })
 export class ProductUpdateComponent implements OnInit {
+
+
+  //Snotify Message
+  style = 'material';
+  title = 'Alert Message';
+  body = 'text';
+  timeout = 1500;
+  position: SnotifyPosition = SnotifyPosition.rightBottom;
+  progressBar = true;
+  closeClick = true;
+  newTop = true;
+  filterDuplicates = false;
+  backdrop = -1;
+  dockMax = 8;
+  blockMax = 6;
+  pauseHover = true;
+  titleMaxLength = 50;
+  bodyMaxLength = 80;
+
+
   productFormGroup: FormGroup;
   //for validation Number or Digit
   numberOrdecimalRegEx = /^[1-9]\d*(\.\d+)?$/;
@@ -36,11 +65,22 @@ export class ProductUpdateComponent implements OnInit {
 
   //for display product category on product add form
   productCategories: ProductCategory[] = [];
+
+
+
+   //for update product
+   ImageFile:ImageData;
+   SelectedCategory: ProductCategory = new ProductCategory();
+   product: Products = new Products();
+   updateProduct: UpdateProduct=new UpdateProduct();
+
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private productService: ProductService,
     private productCategoryService: ProductCategoryService,
+    private productApiCallService: ProductApicallService,
+    private snotifyService: SnotifyService
   ) {}
 
   //Image Dispaly on Add Product form
@@ -124,7 +164,14 @@ export class ProductUpdateComponent implements OnInit {
     return this.productFormGroup.get('productImage');
   }
 
-  onChangeCategoryId(categoryId: number) {}
+  onChangeCategoryId(categoryId: number) {
+    this.productCategoryService
+      .getProductCategoryById(categoryId)
+      .subscribe((data) => {
+        this.SelectedCategory.id = +data['id'];
+        this.SelectedCategory.categoryName = data['categoryName'];
+      });
+  }
 
   // Image Preview
   showPreview(event) {
@@ -158,5 +205,84 @@ export class ProductUpdateComponent implements OnInit {
   }
 
 
-  onSubmit() {}
+  //Snotify Alert
+  getConfig(): SnotifyToastConfig {
+    this.snotifyService.setDefaults({
+      global: {
+        newOnTop: this.newTop,
+        maxAtPosition: this.blockMax,
+        maxOnScreen: this.dockMax,
+        // @ts-ignore
+        filterDuplicates: this.filterDuplicates,
+      },
+    });
+    return {
+      bodyMaxLength: this.bodyMaxLength,
+      titleMaxLength: this.titleMaxLength,
+      backdrop: this.backdrop,
+      position: this.position,
+      timeout: this.timeout,
+      showProgressBar: this.progressBar,
+      closeOnClick: this.closeClick,
+      pauseOnHover: this.pauseHover,
+    };
+  }
+
+  //Snotify Alert Methods
+  onSuccess() {
+    this.snotifyService.success(this.body, this.title, this.getConfig());
+  }
+  onInfo() {
+    this.snotifyService.info(this.body, this.title, this.getConfig());
+  }
+  onError() {
+    this.snotifyService.error(this.body, this.title, this.getConfig());
+  }
+  onWarning() {
+    this.snotifyService.warning(this.body, this.title, this.getConfig());
+  }
+
+
+  onUpdate() {
+    if(this.productFormGroup.invalid){
+      this.productFormGroup.markAllAsTouched();
+      return;
+    }
+this.product.id=+this.Product.id;
+    this.product.name = this.productFormGroup.controls.name.value;
+    this.product.purchasePrice =
+      +this.productFormGroup.controls.purchasePrice.value;
+    this.product.salePrice = +this.productFormGroup.controls.salePrice.value;
+    this.product.stock = +this.productFormGroup.controls.stock.value;
+    this.product.description = this.productFormGroup.controls.description.value;
+
+
+
+
+    // console.log(this.product.productImage)
+this.ImageFile=this.productFormGroup.controls.productImage.value;
+this.updateProduct.category = this.SelectedCategory;
+this.updateProduct.product = this.product;
+
+var formData: any = new FormData();
+    formData.append("productImage",this.ImageFile)
+
+    formData.append("updateProductRequest",
+    new Blob([JSON
+      .stringify(this.updateProduct)], {
+      type: 'application/json'
+    }));
+
+    this.productApiCallService.updateProduct(formData).subscribe({
+      next: (response) => {
+        this.title = 'Update Success';
+        this.body = 'Product: ' + `${response.message}`;
+        this.onSuccess();
+      },
+    });
+
+console.log("Product Id" +this.product.id)
+console.log("Category Id" +this.SelectedCategory.id)
+
+  }
 }

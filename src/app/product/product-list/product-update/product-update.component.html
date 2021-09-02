@@ -4,7 +4,7 @@
       <form
         [formGroup]="productFormGroup"
         enctype="multipart/form-data"
-        (ngSubmit)="onSubmit()"
+        (ngSubmit)="onUpdate()"
       >
         <div class="row">
           <div class="col-md-6">
@@ -26,7 +26,7 @@
               <div
                 *ngIf="Name.errors.required || Name.errors.notOnlyWhitespace"
               >
-                Product Name is required
+                Please update Product Name
               </div>
               <div *ngIf="Name.errors.minlength">
                 Product Name must be at least 2 characters long
@@ -40,11 +40,10 @@
                 class="form-control"
                 id="exampleFormControlSelect1"
               >
-                <option  disabled>Select Category</option>
+                <option selected disabled>Select Category</option>
                 <option
                   *ngFor="let tempProductCategory of productCategories"
                   [value]="tempProductCategory.id"
-                  [selected]="tempProductCategory.categoryName==ProductCategory.categoryName"
                 >
                   {{ tempProductCategory.categoryName }}
                 </option>
@@ -58,7 +57,7 @@
               class="alert alert-danger form-group"
             >
               <div *ngIf="productCategoryId.errors.required">
-                Category Name is Required
+                Please update Category Name
               </div>
             </div>
             <div class="form-group">
@@ -80,7 +79,7 @@
               class="alert alert-danger form-group"
             >
               <div *ngIf="purchasePrice.errors.required">
-                Purchase Price is Required
+                Please update Purchase Price
               </div>
               <div *ngIf="purchasePrice.errors.pattern">
                 Only Number or Decimal are allowed
@@ -104,7 +103,7 @@
               class="alert alert-danger form-group"
             >
               <div *ngIf="salePrice.errors.required">
-                Sale Price is Required
+                Please update Sale Price
               </div>
               <div *ngIf="salePrice.errors.pattern">
                 Only Number or Decimal are allowed
@@ -131,7 +130,7 @@
               *ngIf="stock.invalid && (stock.dirty || stock.touched)"
               class="alert alert-danger form-group"
             >
-              <div *ngIf="stock.errors.required">Stock Number is Required</div>
+              <div *ngIf="stock.errors.required">Please update Stock Number</div>
               <div *ngIf="stock.errors.pattern">Only Number are allowed</div>
             </div>
 
@@ -158,7 +157,7 @@
                   description.errors.notOnlyWhitespace
                 "
               >
-                Description is Required
+                Please update Description
               </div>
               <div *ngIf="description.errors.minlength">
                 Description must be at least 2 characters long
@@ -184,7 +183,7 @@
                   productImage.errors.requiredFileType
                 "
               >
-                Only JPG
+                Please update Photo (Only JPG)
               </div>
             </div>
 
