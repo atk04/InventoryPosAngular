@@ -20,6 +20,12 @@ const routes: Routes = [
       {
         path:'category-page',loadChildren:()=>import('./category/category.module').then(module=>module.CategoryModule)
       },
+      {
+        path:'add-product-page',loadChildren:()=>import('./product/add-product/add-product.module').then(module=>module.AddProductModule)
+      },
+      {
+        path:'product-list-page',loadChildren:()=>import('./product/product-list/product-list.module').then(module=>module.ProductListModule)
+      }
     ]
   },
   {

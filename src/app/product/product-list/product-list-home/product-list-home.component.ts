@@ -1,28 +1,22 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Category } from 'src/app/common/category';
 import { ProductCategory } from 'src/app/common/product-category';
-import { ProductCategoryApicallService } from 'src/app/services/product-category-apicall.service';
-import { ProductCategoryService } from 'src/app/services/product-category.service';
-import { InventoryPos } from 'src/app/validators/inventory-pos';
+import { ProductList } from 'src/app/common/product-list';
+import { Products } from 'src/app/common/products';
+import { ProductService } from 'src/app/services/product.service';
 import {
   SnotifyPosition,
   SnotifyService,
   SnotifyToastConfig,
 } from 'ng-snotify';
+import { ProductApicallService } from 'src/app/services/product-apicall.service';
+
 @Component({
-  selector: 'app-category-home',
-  templateUrl: './category-home.component.html',
-  styleUrls: ['./category-home.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'app-product-list-home',
+  templateUrl: './product-list-home.component.html',
+  styleUrls: ['./product-list-home.component.scss'],
 })
-export class CategoryHomeComponent implements OnInit {
+export class ProductListHomeComponent implements OnInit {
   //Snotify Message
   style = 'material';
   title = 'Alert Message';
@@ -40,11 +34,11 @@ export class CategoryHomeComponent implements OnInit {
   titleMaxLength = 50;
   bodyMaxLength = 80;
 
+  products: ProductList[] = [];
+
   // MatPaginator Output
   pageEvent: PageEvent;
 
-  //Category
-  category: Category = new Category();
   // MatPaginator Inputs
   thePageNumber: number = 1;
   length: number = 0;
@@ -54,7 +48,7 @@ export class CategoryHomeComponent implements OnInit {
   onPaginate(pageEvent: PageEvent) {
     this.pageSize = +pageEvent.pageSize;
     this.thePageNumber = +pageEvent.pageIndex + 1;
-    this.listProductCategories();
+    this.productList();
   }
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
@@ -65,45 +59,24 @@ export class CategoryHomeComponent implements OnInit {
     }
   }
 
-  productCategories: ProductCategory[] = [];
   constructor(
-    private formBuilder: FormBuilder,
-    private productCategoryService: ProductCategoryService,
-    private productCategoryApiCallService: ProductCategoryApicallService,
+    private productService: ProductService,
+    private productApiCallService: ProductApicallService,
     private snotifyService: SnotifyService
   ) {}
 
-  categoryFormGroup: FormGroup;
-
   ngOnInit(): void {
-    this.categoryFormGroup = this.formBuilder.group({
-      categoryName: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        InventoryPos.notOnlyWhitespace,
-      ]),
-    });
-
-    this.listProductCategories();
+    this.productList();
   }
-
-  //End Snotify Message Config
-
-  //categoryName Getter for validation
-  get categoryName() {
-    return this.categoryFormGroup.get('categoryName');
-  }
-
-  listProductCategories() {
-    this.productCategoryService
-      .getProductCategoriesPaginate(this.thePageNumber - 1, this.pageSize)
+  productList() {
+    this.productService
+      .getProductsPaginate(this.thePageNumber - 1, this.pageSize)
       .subscribe(this.processResult());
   }
 
   processResult() {
     return (data) => {
-      console.log(data)
-      this.productCategories = data._embedded.productCategory;
+      this.products = data._embedded.productList;
       this.thePageNumber = data.page.number;
       this.pageSize = data.page.size;
       this.length = data.page.totalElements;
@@ -147,38 +120,13 @@ export class CategoryHomeComponent implements OnInit {
     this.snotifyService.warning(this.body, this.title, this.getConfig());
   }
 
-  onSubmit() {
-    if (this.categoryFormGroup.invalid) {
-      this.categoryFormGroup.markAllAsTouched();
-      return;
-    }
-    this.category.categoryName =
-      this.categoryFormGroup.controls['categoryName'].value;
-    this.productCategoryApiCallService
-      .saveProductCategory(this.category)
-      .subscribe({
-        next: (response) => {
-          this.title = 'Add Success';
-          this.body = 'Category: ' + `${response.categoryName}`;
-          this.onSuccess();
-
-          this.listProductCategories();
-        },
-        error: (err) => {
-          this.title = `Error`;
-          this.body = 'Add Fail';
-          this.onError();
-          this.listProductCategories();
-        },
-      });
-  }
   onDelete(id: number) {
-    this.productCategoryApiCallService.deleteProductCategoryById(id).subscribe({
+    this.productApiCallService.deleteProductById(id).subscribe({
       next: (response) => {
         this.title = 'Delete Success';
-        this.body = 'Category: ' + `${response.message}`;
+        this.body = 'Product: ' + `${response.message}`;
         this.onSuccess();
-        this.listProductCategories();
+        this.productList();
       }
     });
   }

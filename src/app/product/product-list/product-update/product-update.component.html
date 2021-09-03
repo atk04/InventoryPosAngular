@@ -1,0 +1,206 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="Update Product">
+      <form
+        [formGroup]="productFormGroup"
+        enctype="multipart/form-data"
+        (ngSubmit)="onUpdate()"
+      >
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="productName">Product Name</label>
+              <input
+                formControlName="name"
+                type="text"
+                class="form-control"
+                id="productName"
+                placeholder="Enter Product"
+                value="{{Product.name}}"
+              />
+            </div>
+            <div
+              *ngIf="Name.invalid && (Name.dirty || Name.touched)"
+              class="alert alert-danger form-group"
+            >
+              <div
+                *ngIf="Name.errors.required || Name.errors.notOnlyWhitespace"
+              >
+                Please update Product Name
+              </div>
+              <div *ngIf="Name.errors.minlength">
+                Product Name must be at least 2 characters long
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlSelect1">Category Name</label>
+              <select
+                (change)="onChangeCategoryId($event.target.value)"
+                formControlName="productCategoryId"
+                class="form-control"
+                id="exampleFormControlSelect1"
+              >
+                <option selected disabled>Select Category</option>
+                <option
+                  *ngFor="let tempProductCategory of productCategories"
+                  [value]="tempProductCategory.id"
+                >
+                  {{ tempProductCategory.categoryName }}
+                </option>
+              </select>
+            </div>
+            <div
+              *ngIf="
+                productCategoryId.invalid &&
+                (productCategoryId.dirty || productCategoryId.touched)
+              "
+              class="alert alert-danger form-group"
+            >
+              <div *ngIf="productCategoryId.errors.required">
+                Please update Category Name
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="purchasePrice">Purchase Price</label>
+              <input
+                formControlName="purchasePrice"
+                type="text"
+                class="form-control"
+                id="purchasePrice"
+                placeholder="Enter Purchase Price"
+                value="{{Product.purchasePrice}}"
+              />
+            </div>
+            <div
+              *ngIf="
+                purchasePrice.invalid &&
+                (purchasePrice.dirty || purchasePrice.touched)
+              "
+              class="alert alert-danger form-group"
+            >
+              <div *ngIf="purchasePrice.errors.required">
+                Please update Purchase Price
+              </div>
+              <div *ngIf="purchasePrice.errors.pattern">
+                Only Number or Decimal are allowed
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="salePrice">Sale Price</label>
+              <input
+                formControlName="salePrice"
+                type="text"
+                class="form-control"
+                id="salePrice"
+                placeholder="Enter Sale Price"
+                value="{{Product.salePrice}}"
+              />
+            </div>
+            <div
+              *ngIf="
+                salePrice.invalid && (salePrice.dirty || salePrice.touched)
+              "
+              class="alert alert-danger form-group"
+            >
+              <div *ngIf="salePrice.errors.required">
+                Please update Sale Price
+              </div>
+              <div *ngIf="salePrice.errors.pattern">
+                Only Number or Decimal are allowed
+              </div>
+            </div>
+
+            <button type="submit" mat-raised-button color="warn">
+              Update Product
+            </button>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="stock">Stock</label>
+              <input
+                formControlName="stock"
+                type="text"
+                class="form-control"
+                id="stock"
+                placeholder="Enter Stock"
+                value="{{Product.stock}}"
+              />
+            </div>
+            <div
+              *ngIf="stock.invalid && (stock.dirty || stock.touched)"
+              class="alert alert-danger form-group"
+            >
+              <div *ngIf="stock.errors.required">Please update Stock Number</div>
+              <div *ngIf="stock.errors.pattern">Only Number are allowed</div>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea
+                formControlName="description"
+                class="form-control"
+                id="description"
+                rows="2"
+                value="{{Product.description}}"
+              ></textarea>
+            </div>
+            <div
+              *ngIf="
+                description.invalid &&
+                (description.dirty || description.touched)
+              "
+              class="alert alert-danger form-group"
+            >
+              <div
+                *ngIf="
+                  description.errors.required ||
+                  description.errors.notOnlyWhitespace
+                "
+              >
+                Please update Description
+              </div>
+              <div *ngIf="description.errors.minlength">
+                Description must be at least 2 characters long
+              </div>
+            </div>
+
+            <app-image-upload
+              formControlName="productImage"
+              (change)="showPreview($event)"
+            ></app-image-upload>
+
+            <div
+              *ngIf="
+                productImage.invalid &&
+                  (productImage.dirty || productImage.touched);
+                else second
+              "
+              class="alert alert-danger form-group"
+            >
+              <div
+                *ngIf="
+                  productImage.errors.required ||
+                  productImage.errors.requiredFileType
+                "
+              >
+                Please update Photo (Only JPG)
+              </div>
+            </div>
+
+            <ng-template #second>
+              <img
+                style="width: auto; height: 10em; display: inline-block"
+                [src]="imageURL"
+                [alt]="productFormGroup.value.productImage"
+                src="{{Product.imageUrl}}"
+              />
+            </ng-template>
+          </div>
+        </div>
+      </form>
+    </app-card>
+  </div>
+</div>
+<div class="row">
+  <ng-snotify></ng-snotify>
+</div>

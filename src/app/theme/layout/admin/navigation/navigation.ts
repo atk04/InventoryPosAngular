@@ -48,38 +48,24 @@ const NavigationItems = [
         icon: 'feather icon-list'
       },
       {
-        id: 'menu-level',
-        title: 'Menu Levels',
+        id: 'product',
+        title: 'Product',
         type: 'collapse',
-        icon: 'feather icon-menu',
+        icon: 'feather icon-package',
         children: [
           {
-            id: 'menu-level-2.1',
-            title: 'Menu Level 2.1',
+            id: 'add-product-page',
+            title: 'Add Product',
             type: 'item',
-            url: 'javascript:',
-            external: true
+            url: '/add-product-page',
+            external: false
           },
           {
-            id: 'menu-level-2.2',
-            title: 'Menu Level 2.2',
-            type: 'collapse',
-            children: [
-              {
-                id: 'menu-level-2.2.1',
-                title: 'Menu Level 2.2.1',
-                type: 'item',
-                url: 'javascript:',
-                external: true
-              },
-              {
-                id: 'menu-level-2.2.2',
-                title: 'Menu Level 2.2.2',
-                type: 'item',
-                url: 'javascript:',
-                external: true
-              }
-            ]
+            id: 'product-list-page',
+            title: 'Product List',
+            type: 'item',
+            url: '/product-list-page',
+            external: false
           }
         ]
       }
