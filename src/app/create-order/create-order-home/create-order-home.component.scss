@@ -1,0 +1,36 @@
+.form-group .form-control{
+  padding-left: 1.2em !important;
+}
+table{
+  margin-left: 1em;
+  margin-right: 1em;
+
+}
+
+table th{
+  text-align: center;
+  line-height: 3em;
+  padding-top:0.5em;
+  padding-bottom: 0.5em;
+  background-color:white;
+}
+
+.custom-control {
+  float:left;
+  margin-right: 1em;
+}
+.payment{
+  float:none !important;
+  display: block;
+}
+
+#plus{
+  background-color: lightgreen;
+}
+
+#times{
+  background-color: rgb(252, 107, 107);
+}
+table td{
+  text-align: center;
+}

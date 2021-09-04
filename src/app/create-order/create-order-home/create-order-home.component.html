@@ -1,0 +1,246 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="Create Order">
+      <div class="row">
+        <div class="col-md-6 m-b-30 m-t-20">
+          <label for="customerName">Customer Name</label>
+          <div class="input-group">
+            <div class="input-group-append">
+              <span class="input-group-text">
+                <i class="fa fa-user"></i>
+              </span>
+            </div>
+            <input
+              type="text"
+              id="customerName"
+              class="form-control"
+              placeholder="Enter Customer Name"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 m-b-30 m-t-20">
+          <label for="customerName">Date</label>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="d.toggle()">
+                  <i class="fa fa-calendar"></i>
+                </span>
+              </div>
+              <input
+                class="form-control"
+                autocomplete="off"
+                placeholder="yyyy-mm-dd"
+                name="dp"
+                ngbDatepicker
+                #d="ngbDatepicker"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="overflow-x:auto;">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Search Product</th>
+              <th>Stock</th>
+              <th>Price</th>
+              <th>Enter Quantity</th>
+              <th>Total</th>
+              <th>
+                <button type="button" mat-raised-button id="plus" (click)="onAddRow()" >
+                  <i class="fa fa-plus"></i>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of addForm.get('rows')?.controls;let index = index;">
+              <td>{{index+1}}</td>
+              <td>
+                <select (change)="onSelectedProduct(index,$event.target.value)"  class="form-control">
+                  <option selected disabled>Select Product</option>
+                  <option
+                  *ngFor="let tempProductList of ProductList"
+                  [value]="tempProductList.id"
+                >
+                  {{ tempProductList.name }}
+                </option>
+                </select>
+              </td>
+              <td>{{ this.rows.value[index].stock}}</td>
+              <td>{{this.rows.value[index].salePrice}}</td>
+              <td>
+                <input   class="form-control" (click)="onClickQuantity(index,$event.target.value)" type="number"  [value]="this.rows.value[index].quantity"/>
+
+              </td>
+              <td>{{this.rows.value[index].total}}</td>
+              <td>
+                <button type="button" mat-raised-button id="times" (click)="onRemoveRow(index)" >
+                  <i class="fa fa-times"></i>
+                </button>
+              </td>
+
+            </tr>
+
+          </tbody>
+        </table>
+        <pre>{{rows.value | json}}</pre>
+      </div>
+      <div class="row">
+        <div class="col-md-6 m-b-30">
+          <label for="subtotal">SubTotal</label>
+          <div class="input-group">
+            <div class="input-group-append">
+              <span class="input-group-text">
+                <i class="fa fa-dollar-sign"></i>
+              </span>
+            </div>
+            <input
+              type="text"
+              id="subtotal"
+              class="form-control"
+              placeholder="Enter Subtotal"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 m-b-30">
+          <label for="total">Total</label>
+          <div class="input-group">
+            <div class="input-group-append">
+              <span class="input-group-text">
+                <i class="fa fa-dollar-sign"></i>
+              </span>
+            </div>
+            <input
+              type="text"
+              id="total"
+              class="form-control"
+              placeholder="Enter Total"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 m-b-30">
+          <label for="tax">Tax (5%)</label>
+          <div class="input-group">
+            <div class="input-group-append">
+              <span class="input-group-text">
+                <i class="fa fa-dollar-sign"></i>
+              </span>
+            </div>
+            <input
+              type="text"
+              id="tax"
+              class="form-control"
+              placeholder="Enter Tax"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 m-b-30">
+          <label for="paid">Paid</label>
+          <div class="input-group">
+            <div class="input-group-append">
+              <span class="input-group-text">
+                <i class="fa fa-dollar-sign"></i>
+              </span>
+            </div>
+            <input
+              type="text"
+              id="paid"
+              class="form-control"
+              placeholder="Enter Paid"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 m-b-30">
+          <label for="discount">Discount</label>
+          <div class="input-group">
+            <div class="input-group-append">
+              <span class="input-group-text">
+                <i class="fa fa-dollar-sign"></i>
+              </span>
+            </div>
+            <input
+              type="text"
+              id="discount"
+              class="form-control"
+              placeholder="Enter Discount"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 m-b-30">
+          <label for="due">Due</label>
+          <div class="input-group">
+            <div class="input-group-append">
+              <span class="input-group-text">
+                <i class="fa fa-dollar-sign"></i>
+              </span>
+            </div>
+            <input
+              type="text"
+              id="due"
+              class="form-control"
+              placeholder="Enter Due"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 m-b-30"></div>
+        <div class="col-md-6 m-b-30">
+          <div class="payment">Payment Method</div>
+          <div class="custom-control custom-radio">
+            <input
+              type="radio"
+              class="custom-control-input"
+              id="cash"
+              name="radio-stacked"
+              required
+            />
+            <label class="custom-control-label" for="cash">CASH</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input
+              type="radio"
+              class="custom-control-input"
+              id="card"
+              name="radio-stacked"
+              required
+            />
+            <label class="custom-control-label" for="card">CARD</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input
+              type="radio"
+              class="custom-control-input"
+              id="check"
+              name="radio-stacked"
+              required
+            />
+            <label class="custom-control-label" for="check">CHECK</label>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+
+
+
+
+        <button mat-raised-button type="button"
+        mat-raised-button
+        >
+          Save Order
+        </button>
+      </div>
+    </app-card>
+  </div>
+</div>
+<div class="row">
+  <ng-snotify></ng-snotify>
+</div>

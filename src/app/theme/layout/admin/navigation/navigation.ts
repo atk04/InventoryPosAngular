@@ -68,6 +68,14 @@ const NavigationItems = [
             external: false
           }
         ]
+      },
+      {
+        id: 'create-order-page',
+        title: 'Create Order',
+        type: 'item',
+        url: '/create-order-page',
+        classes: 'nav-item',
+        icon: 'feather icon-shopping-cart'
       }
     ]
   }

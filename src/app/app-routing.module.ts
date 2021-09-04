@@ -25,6 +25,9 @@ const routes: Routes = [
       },
       {
         path:'product-list-page',loadChildren:()=>import('./product/product-list/product-list.module').then(module=>module.ProductListModule)
+      },
+      {
+        path:'create-order-page',loadChildren:()=>import('./create-order/create-order.module').then(module=>module.CreateOrderModule)
       }
     ]
   },
