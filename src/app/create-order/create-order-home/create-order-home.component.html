@@ -60,7 +60,8 @@
             <tr *ngFor="let row of addForm.get('rows')?.controls;let index = index;">
               <td>{{index+1}}</td>
               <td>
-                <select (change)="onSelectedProduct(index,$event.target.value)"  class="form-control">
+
+                <!-- <select (change)="onSelectedProduct(index,$event.target.value)"  class="form-control">
                   <option selected disabled>Select Product</option>
                   <option
                   *ngFor="let tempProductList of ProductList"
@@ -68,12 +69,16 @@
                 >
                   {{ tempProductList.name }}
                 </option>
-                </select>
+                </select> -->
+                <ng-select  (change)="onSelectedProduct(index,$event)" [clearable]="false"
+                placeholder="Select your product...">
+                  <ng-option *ngFor="let product of ProductListItem" [value]="product.id"  >{{product.name}}</ng-option>
+                </ng-select>
               </td>
               <td>{{ this.rows.value[index].stock}}</td>
               <td>{{this.rows.value[index].salePrice}}</td>
               <td>
-                <input   class="form-control" (click)="onClickQuantity(index,$event.target.value)" type="number"  [value]="this.rows.value[index].quantity"/>
+                <input   class="form-control" (click)="onClickQuantity(index,$event.target.value)" type="number" min="1"  [value]="this.rows.value[index].quantity"/>
 
               </td>
               <td>{{this.rows.value[index].total}}</td>

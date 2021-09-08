@@ -6,7 +6,8 @@ import { CreateOrderRoutingModule } from './create-order-routing.module';
 import { CreateOrderHomeComponent } from './create-order-home/create-order-home.component';
 import {NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
-
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 const materialModules = [
   MatButtonModule,
 
@@ -21,7 +22,9 @@ const materialModules = [
     SharedModule,
     materialModules,
     NgbDatepickerModule,
-    SnotifyModule
+    SnotifyModule,
+    FormsModule,
+    NgSelectModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   providers: [{ provide: 'SnotifyToastConfig', useValue: ToastDefaults }, SnotifyService]

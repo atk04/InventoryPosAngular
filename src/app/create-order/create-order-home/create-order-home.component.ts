@@ -43,12 +43,15 @@ export class CreateOrderHomeComponent implements OnInit {
 
   addForm: FormGroup;
   rows: FormArray;
-  ProductListId: number = 0;
+  ProductListId: number;
 
 
   CurrentProduct: Products = new Products();
   SelectedProductList: Array<Products> = [];
   ProductList: ProductList[] = [];
+
+  ProductListItem: ProductList[] = [];
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -69,17 +72,25 @@ export class CreateOrderHomeComponent implements OnInit {
     });
 
     this.getProduct();
+
+
   }
   getProduct() {
     this.productService.getProducts().subscribe((data) => {
       this.ProductList = data;
+
+      for(let i=0;i<this.ProductList.length;i++){
+
+        this.ProductListItem.push(this.ProductList[i]);
+      }
     });
   }
 
-  onSelectedProduct(index: number, id: number) {
+  onSelectedProduct(index:number,id:number) {
+    //console.log(this.ProductListId)
     this.ProductListId = +id;
-
-    this.productService.getProductById(this.ProductListId).subscribe((data) => {
+let currentId=this.ProductListId;
+    this.productService.getProductById(currentId).subscribe((data) => {
       this.CurrentProduct.id = +data.id;
       this.CurrentProduct.name = data.name;
       this.CurrentProduct.stock = data.stock;
@@ -108,6 +119,8 @@ export class CreateOrderHomeComponent implements OnInit {
 
       this.CurrentProduct = new Products();
     });
+
+
   }
 
   onClickQuantity(index: number, quantity: number) {
@@ -115,10 +128,13 @@ export class CreateOrderHomeComponent implements OnInit {
   }
 
   onAddRow() {
+    this.ProductListId=0;
     this.addForm.addControl('rows', this.rows);
 
     this.rows.push(this.createItemFormGroup());
   }
+
+
 
   onRemoveRow(rowIndex: number) {
     this.rows.removeAt(rowIndex);
