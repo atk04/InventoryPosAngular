@@ -25,7 +25,7 @@ export class CreateOrderHomeComponent implements OnInit {
   style = 'material';
   title = 'Alert Message';
   body = 'text';
-  timeout = 1500;
+  timeout = 2000;
   position: SnotifyPosition = SnotifyPosition.rightBottom;
   progressBar = true;
   closeClick = true;
@@ -43,12 +43,15 @@ export class CreateOrderHomeComponent implements OnInit {
 
   addForm: FormGroup;
   rows: FormArray;
-  ProductListId: number = 0;
+  ProductListId: number;
 
 
   CurrentProduct: Products = new Products();
   SelectedProductList: Array<Products> = [];
   ProductList: ProductList[] = [];
+
+  ProductListItem: ProductList[] = [];
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -69,17 +72,25 @@ export class CreateOrderHomeComponent implements OnInit {
     });
 
     this.getProduct();
+
+
   }
   getProduct() {
     this.productService.getProducts().subscribe((data) => {
       this.ProductList = data;
+
+      for(let i=0;i<this.ProductList.length;i++){
+
+        this.ProductListItem.push(this.ProductList[i]);
+      }
     });
   }
 
-  onSelectedProduct(index: number, id: number) {
+  onSelectedProduct(index:number,id:number) {
+    //console.log(this.ProductListId)
     this.ProductListId = +id;
-
-    this.productService.getProductById(this.ProductListId).subscribe((data) => {
+let currentId=this.ProductListId;
+    this.productService.getProductById(currentId).subscribe((data) => {
       this.CurrentProduct.id = +data.id;
       this.CurrentProduct.name = data.name;
       this.CurrentProduct.stock = data.stock;
@@ -108,17 +119,46 @@ export class CreateOrderHomeComponent implements OnInit {
 
       this.CurrentProduct = new Products();
     });
+
+
   }
 
   onClickQuantity(index: number, quantity: number) {
-    this.rows.value[index].total = quantity * this.rows.value[index].salePrice;
+
+    this.rows.value[index].quantity=+quantity;
+    if(this.rows.value[index].quantity==0){
+
+      this.rows.value[index].quantity=1;
+      this.rows.value[index].total =this.rows.value[index].quantity * this.rows.value[index].salePrice;
+      this.onRemoveRow(index);
+      this.title = 'Create Order';
+      this.body ='Quantity: Quantity must not equal to zero';
+      this.onInfo();
+
+
+    }
+    if(quantity>this.rows.value[index].stock){
+      this.title = 'Create Order';
+      if(this.rows.value[index].quantity >1){
+      this.body ='Quantity: This much of quantity is not available';
+      }
+      this.onWarning();
+      this.rows.value[index].quantity=+1;
+      this.rows.value[index].total = this.rows.value[index].quantity * this.rows.value[index].salePrice;
+    }else{
+      this.rows.value[index].total = quantity * this.rows.value[index].salePrice;
+    }
+
   }
 
   onAddRow() {
+    this.ProductListId=0;
     this.addForm.addControl('rows', this.rows);
 
     this.rows.push(this.createItemFormGroup());
   }
+
+
 
   onRemoveRow(rowIndex: number) {
     this.rows.removeAt(rowIndex);
