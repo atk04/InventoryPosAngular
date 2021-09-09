@@ -22,8 +22,8 @@
               <tr *ngFor="let tempProduct of products">
                 <td>{{ tempProduct.id }}</td>
                 <td>{{ tempProduct.name }}</td>
-                <td>{{ tempProduct.purchasePrice }}</td>
-                <td>{{ tempProduct.salePrice }}</td>
+                <td>{{ tempProduct.purchasePrice|currency:'USD': 'symbol' : '1.0-0' }}</td>
+                <td>{{ tempProduct.salePrice|currency:'USD': 'symbol' : '1.0-0' }}</td>
                 <td><img src={{tempProduct.imageUrl}}/></td>
                 <td>
                   <a

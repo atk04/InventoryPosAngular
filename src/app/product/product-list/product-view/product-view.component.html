@@ -64,7 +64,7 @@
                   </td>
                   <td class="text-right">
                     <label class="badge badge-light-warning">{{
-                      Product.purchasePrice
+                      Product.purchasePrice|currency:'USD': 'symbol' : '1.0-0'
                     }}</label>
                   </td>
                 </tr>
@@ -78,7 +78,7 @@
                   </td>
                   <td class="text-right">
                     <label class="badge badge-light-warning">{{
-                      Product.salePrice
+                      Product.salePrice|currency:'USD': 'symbol' : '1.0-0'
                     }}</label>
                   </td>
                 </tr>
