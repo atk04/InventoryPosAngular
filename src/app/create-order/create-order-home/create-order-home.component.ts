@@ -20,7 +20,6 @@ import {
   styleUrls: ['./create-order-home.component.scss'],
 })
 export class CreateOrderHomeComponent implements OnInit {
-
   //Snotify Message
   style = 'material';
   title = 'Alert Message';
@@ -38,13 +37,9 @@ export class CreateOrderHomeComponent implements OnInit {
   titleMaxLength = 50;
   bodyMaxLength = 80;
 
-
-
-
   addForm: FormGroup;
   rows: FormArray;
   ProductListId: number;
-
 
   CurrentProduct: Products = new Products();
   SelectedProductList: Array<Products> = [];
@@ -52,6 +47,8 @@ export class CreateOrderHomeComponent implements OnInit {
 
   ProductListItem: ProductList[] = [];
 
+  //Subtotal
+  Subtotal: number = 0;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -72,24 +69,21 @@ export class CreateOrderHomeComponent implements OnInit {
     });
 
     this.getProduct();
-
-
   }
   getProduct() {
     this.productService.getProducts().subscribe((data) => {
       this.ProductList = data;
 
-      for(let i=0;i<this.ProductList.length;i++){
-
+      for (let i = 0; i < this.ProductList.length; i++) {
         this.ProductListItem.push(this.ProductList[i]);
       }
     });
   }
 
-  onSelectedProduct(index:number,id:number) {
+  onSelectedProduct(index: number, id: number) {
     //console.log(this.ProductListId)
     this.ProductListId = +id;
-let currentId=this.ProductListId;
+    let currentId = this.ProductListId;
     this.productService.getProductById(currentId).subscribe((data) => {
       this.CurrentProduct.id = +data.id;
       this.CurrentProduct.name = data.name;
@@ -103,9 +97,14 @@ let currentId=this.ProductListId;
         }
         if (count > 1) {
           this.title = 'Create Order';
-        this.body ='Product: '+this.CurrentProduct.name +' is already selected.';
-        this.onInfo();
+          this.body =
+            'Product: ' + this.CurrentProduct.name + ' is already selected.';
+          this.onInfo();
+          this.Subtotal =
+            this.Subtotal -
+            (this.CurrentProduct.salePrice + this.rows.value[index].salePrice);
           this.onRemoveRow(index);
+
           break;
         } else {
           this.rows.value[index].id = this.ProductListId;
@@ -117,48 +116,54 @@ let currentId=this.ProductListId;
         }
       }
 
+      if (count < 2 && this.rows.length > 1) {
+        this.Subtotal += this.rows.value[this.rows.length - 1].total;
+      } else {
+        let SubtotalValue = 0;
+        for (let i = 0; i < this.rows.length; i++) {
+          SubtotalValue += this.rows.value[i].total;
+        }
+        this.Subtotal = SubtotalValue;
+      }
+
+      console.log(this.Subtotal);
+
       this.CurrentProduct = new Products();
     });
-
-
   }
 
   onClickQuantity(index: number, quantity: number) {
-
-    this.rows.value[index].quantity=+quantity;
-    if(this.rows.value[index].quantity==0){
-
-      this.rows.value[index].quantity=1;
-      this.rows.value[index].total =this.rows.value[index].quantity * this.rows.value[index].salePrice;
+    this.rows.value[index].quantity = +quantity;
+    if (this.rows.value[index].quantity == 0) {
+      this.rows.value[index].quantity = 1;
+      this.rows.value[index].total =
+        this.rows.value[index].quantity * this.rows.value[index].salePrice;
       this.onRemoveRow(index);
       this.title = 'Create Order';
-      this.body ='Quantity: Quantity must not equal to zero';
+      this.body = 'Quantity: Quantity must not equal to zero';
       this.onInfo();
-
-
     }
-    if(quantity>this.rows.value[index].stock){
+    if (quantity > this.rows.value[index].stock) {
       this.title = 'Create Order';
-      if(this.rows.value[index].quantity >1){
-      this.body ='Quantity: This much of quantity is not available';
+      if (this.rows.value[index].quantity > 1) {
+        this.body = 'Quantity: This much of quantity is not available';
       }
       this.onWarning();
-      this.rows.value[index].quantity=+1;
-      this.rows.value[index].total = this.rows.value[index].quantity * this.rows.value[index].salePrice;
-    }else{
-      this.rows.value[index].total = quantity * this.rows.value[index].salePrice;
+      this.rows.value[index].quantity = +1;
+      this.rows.value[index].total =
+        this.rows.value[index].quantity * this.rows.value[index].salePrice;
+    } else {
+      this.rows.value[index].total =
+        quantity * this.rows.value[index].salePrice;
     }
-
   }
 
   onAddRow() {
-    this.ProductListId=0;
+    this.ProductListId = 0;
     this.addForm.addControl('rows', this.rows);
 
     this.rows.push(this.createItemFormGroup());
   }
-
-
 
   onRemoveRow(rowIndex: number) {
     this.rows.removeAt(rowIndex);
@@ -173,7 +178,6 @@ let currentId=this.ProductListId;
       total: null,
     });
   }
-
 
   //Snotify Alert
   getConfig(): SnotifyToastConfig {
@@ -211,5 +215,4 @@ let currentId=this.ProductListId;
   onWarning() {
     this.snotifyService.warning(this.body, this.title, this.getConfig());
   }
-
 }

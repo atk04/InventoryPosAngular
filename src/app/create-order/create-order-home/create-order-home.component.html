@@ -78,7 +78,7 @@
               <td>{{ this.rows.value[index].stock}}</td>
               <td>{{this.rows.value[index].salePrice}}</td>
               <td>
-                <input   class="form-control"  (keyup)="onClickQuantity(index,$event.target.value)" type="number" min="1"  [value]="this.rows.value[index].quantity"/>
+                <input   class="form-control" (click)="onClickQuantity(index,$event.target.value)"  (keyup)="onClickQuantity(index,$event.target.value)" type="number" min="1"  [value]="this.rows.value[index].quantity"/>
 
               </td>
               <td>{{this.rows.value[index].total}}</td>
