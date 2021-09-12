@@ -50,6 +50,21 @@ export class CreateOrderHomeComponent implements OnInit {
   //Subtotal
   Subtotal: number = 0;
 
+  //Tax
+  Tax:number=0;
+
+  //Discount
+  Percent:number=0;
+
+  //Order total
+  OrderTotal:number=0;
+
+  //Paid
+  Paid:number=0;
+
+  //Due
+  Due:number=0;
+
   constructor(
     private formBuilder: FormBuilder,
     private productService: ProductService,
@@ -118,12 +133,19 @@ export class CreateOrderHomeComponent implements OnInit {
 
       if (count < 2 && this.rows.length > 1) {
         this.Subtotal += this.rows.value[this.rows.length - 1].total;
+        if(this.Percent==0){
+          this.OrderTotal=this.Subtotal+this.Tax;
+        }
       } else {
         let SubtotalValue = 0;
         for (let i = 0; i < this.rows.length; i++) {
           SubtotalValue += this.rows.value[i].total;
         }
         this.Subtotal = SubtotalValue;
+        this.Tax=this.Subtotal*0.05;
+        if(this.Percent==0){
+          this.OrderTotal=this.Subtotal+this.Tax;
+        }
       }
 
       console.log(this.Subtotal);
@@ -155,6 +177,16 @@ export class CreateOrderHomeComponent implements OnInit {
     } else {
       this.rows.value[index].total =
         quantity * this.rows.value[index].salePrice;
+      let currentSutotal = 0;
+      for (let i = 0; i < this.rows.length; i++) {
+        currentSutotal += this.rows.value[i].total;
+      }
+      this.Subtotal = currentSutotal;
+      this.Tax=this.Subtotal*0.05;
+      if(this.Percent==0){
+        this.OrderTotal=this.Subtotal+this.Tax;
+      }
+      console.log('Subtotal with quantity = ' + this.Subtotal);
     }
   }
 
@@ -166,6 +198,9 @@ export class CreateOrderHomeComponent implements OnInit {
   }
 
   onRemoveRow(rowIndex: number) {
+    this.Subtotal -= this.rows.value[rowIndex].total;
+    this.Tax=this.Subtotal*0.05;
+    console.log('Delete with subtotal ' + this.Subtotal);
     this.rows.removeAt(rowIndex);
   }
 
@@ -177,6 +212,16 @@ export class CreateOrderHomeComponent implements OnInit {
       quantity: null,
       total: null,
     });
+  }
+
+  onDiscountChange(percent:number){
+    this.Percent=percent;
+    let discountAmount=(this.Percent/100)*(this.Subtotal+this.Tax);
+
+    this.OrderTotal=(this.Subtotal+this.Tax)-(discountAmount);
+    if(percent==0){
+      this.OrderTotal=this.Subtotal+this.Tax;
+    }
   }
 
   //Snotify Alert
