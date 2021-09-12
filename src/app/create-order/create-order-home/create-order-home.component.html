@@ -76,12 +76,12 @@
                 </ng-select>
               </td>
               <td>{{ this.rows.value[index].stock}}</td>
-              <td>{{this.rows.value[index].salePrice}}</td>
+              <td>{{this.rows.value[index].salePrice |currency:'USD'}}</td>
               <td>
                 <input   class="form-control" (click)="onClickQuantity(index,$event.target.value)"  (keyup)="onClickQuantity(index,$event.target.value)" type="number" min="1"  [value]="this.rows.value[index].quantity"/>
 
               </td>
-              <td>{{this.rows.value[index].total}}</td>
+              <td>{{this.rows.value[index].total|currency:'USD'}}</td>
               <td>
                 <button type="button" mat-raised-button id="times" (click)="onRemoveRow(index)" >
                   <i class="fa fa-times"></i>
@@ -109,7 +109,7 @@
               class="form-control"
               placeholder="Subtotal"
               readonly
-              [value]="Subtotal"
+              [value]="Subtotal | number :'1.0-0'"
             />
           </div>
         </div>
@@ -147,7 +147,7 @@
               class="form-control"
               placeholder="Tax"
               readonly
-              [value]="Tax"
+              [value]="Tax| number :'1.0-0'"
             />
           </div>
         </div>
@@ -160,21 +160,22 @@
               </span>
             </div>
             <input
-              type="text"
+              type="number"
               id="paid"
               class="form-control"
               placeholder="Enter Paid"
+              [ngModel]="Paid" (ngModelChange)="onPaidChange($event)"
             />
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-6 m-b-30">
-          <label for="discount">Discount(%)</label>
+          <label for="discount">Discount</label>
           <div class="input-group">
             <div class="input-group-append">
               <span class="input-group-text">
-                <i class="fa fa-dollar-sign"></i>
+                <i class="fa fa-percent"></i>
               </span>
             </div>
             <input
@@ -200,7 +201,7 @@
               class="form-control"
               placeholder="Due"
               readonly
-              [value]="Due"
+              [value]="Due | number :'1.0-0'"
             />
           </div>
         </div>

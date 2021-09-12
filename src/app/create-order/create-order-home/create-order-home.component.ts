@@ -222,6 +222,15 @@ export class CreateOrderHomeComponent implements OnInit {
     if(percent==0){
       this.OrderTotal=this.Subtotal+this.Tax;
     }
+    if(this.Percent!=0 && this.Paid!=0){
+this.Due=this.OrderTotal-this.Paid;
+    }
+
+  }
+
+  onPaidChange(paid:number){
+    this.Paid=paid;
+    this.Due=this.OrderTotal-paid;
   }
 
   //Snotify Alert
