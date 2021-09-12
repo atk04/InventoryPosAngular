@@ -1,6 +1,9 @@
 <div class="row">
+
   <div class="col-sm-12">
+
     <app-card cardTitle="Create Order">
+
       <div class="row">
         <div class="col-md-6 m-b-30 m-t-20">
           <label for="customerName">Customer Name</label>
@@ -127,7 +130,7 @@
               class="form-control"
               placeholder="Total"
               readonly
-              [ngModel]="OrderTotal"
+              [ngModel]="OrderTotal|number :'2.1-1'"
             />
           </div>
         </div>
@@ -203,7 +206,7 @@
               class="form-control"
               placeholder="Due"
               readonly
-              [value]="Due | number :'1.0-0'"
+              [value]="Due | number :'2.1-1'"
             />
           </div>
         </div>
@@ -218,6 +221,7 @@
               class="custom-control-input"
               id="cash"
               name="radio-stacked"
+              checked
               required
             />
             <label class="custom-control-label" for="cash">CASH</label>
@@ -249,14 +253,18 @@
 
 
 
-        <button mat-raised-button type="button"
+        <button mat-raised-button type="button" id="saveOrder"
         mat-raised-button
         >
           Save Order
         </button>
       </div>
+
     </app-card>
+
   </div>
+
+
 </div>
 <div class="row">
   <ng-snotify></ng-snotify>

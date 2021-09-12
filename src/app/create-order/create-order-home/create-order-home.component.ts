@@ -51,19 +51,25 @@ export class CreateOrderHomeComponent implements OnInit {
   Subtotal: number = 0;
 
   //Tax
-  Tax:number=0;
+  Tax: number = 0;
 
   //Discount
-  Percent:number=0;
+  Percent: number = 0;
 
   //Order total
-  OrderTotal:number=0;
+  OrderTotal: number = 0;
 
   //Paid
-  Paid:number=0;
+  Paid: number = 0;
 
   //Due
-  Due:number=0;
+  Due: number = 0;
+
+  //for validation discount percent
+  discountRegex = /^[1-9]$|^[1-9][0-9]$|^(100)$/;
+
+  //for validation Number or Digit
+  numberOrdecimalRegEx = /^[1-9]\d*(\.\d+)?$/;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -75,7 +81,7 @@ export class CreateOrderHomeComponent implements OnInit {
     });
     this.rows = this.formBuilder.array([]);
   }
-
+  productOrderForm: FormGroup;
   ngOnInit(): void {
     this.addForm.get('items').valueChanges.subscribe((val) => {
       if (val === true) {
@@ -84,6 +90,14 @@ export class CreateOrderHomeComponent implements OnInit {
     });
 
     this.getProduct();
+
+    this.productOrderForm = this.formBuilder.group({
+      discount: new FormControl('', [Validators.pattern(this.discountRegex)]),
+      paid: new FormControl('', [
+        Validators.required,
+        Validators.pattern(this.numberOrdecimalRegEx),
+      ]),
+    });
   }
   getProduct() {
     this.productService.getProducts().subscribe((data) => {
@@ -133,21 +147,23 @@ export class CreateOrderHomeComponent implements OnInit {
 
       if (count < 2 && this.rows.length > 1) {
         this.Subtotal += this.rows.value[this.rows.length - 1].total;
-        if(this.Percent==0){
-          this.OrderTotal=this.Subtotal+this.Tax;
-        }
+        this.OrderTotal = this.Subtotal + this.Tax;
+        this.OrderTotal = Math.round(this.OrderTotal);
+        this.onDiscountChange(this.Percent);
       } else {
         let SubtotalValue = 0;
         for (let i = 0; i < this.rows.length; i++) {
           SubtotalValue += this.rows.value[i].total;
         }
         this.Subtotal = SubtotalValue;
-        this.Tax=this.Subtotal*0.05;
-        if(this.Percent==0){
-          this.OrderTotal=this.Subtotal+this.Tax;
-        }
-      }
+        this.Tax = this.Subtotal * 0.05;
 
+        this.OrderTotal = this.Subtotal + this.Tax;
+        this.OrderTotal = Math.round(this.OrderTotal);
+        this.onDiscountChange(this.Percent);
+      }
+      this.Due = this.OrderTotal - this.Paid;
+      this.Due = Math.round(this.Due);
       console.log(this.Subtotal);
 
       this.CurrentProduct = new Products();
@@ -174,6 +190,22 @@ export class CreateOrderHomeComponent implements OnInit {
       this.rows.value[index].quantity = +1;
       this.rows.value[index].total =
         this.rows.value[index].quantity * this.rows.value[index].salePrice;
+
+//recalculate the order
+let SubtotalValue = 0;
+        for (let i = 0; i < this.rows.length; i++) {
+          SubtotalValue += this.rows.value[i].total;
+        }
+        this.Subtotal = SubtotalValue;
+        this.Tax = this.Subtotal * 0.05;
+
+        this.OrderTotal = this.Subtotal + this.Tax;
+        this.OrderTotal = Math.round(this.OrderTotal);
+        this.onDiscountChange(this.Percent);
+        this.Due = this.OrderTotal - this.Paid;
+        this.Due = Math.round(this.Due);
+
+
     } else {
       this.rows.value[index].total =
         quantity * this.rows.value[index].salePrice;
@@ -182,10 +214,12 @@ export class CreateOrderHomeComponent implements OnInit {
         currentSutotal += this.rows.value[i].total;
       }
       this.Subtotal = currentSutotal;
-      this.Tax=this.Subtotal*0.05;
-      if(this.Percent==0){
-        this.OrderTotal=this.Subtotal+this.Tax;
-      }
+      this.Tax = this.Subtotal * 0.05;
+
+      this.OrderTotal = this.Subtotal + this.Tax;
+      this.OrderTotal = Math.round(this.OrderTotal);
+      this.Due = this.OrderTotal - this.Paid;
+      this.Due = Math.round(this.Due);
       console.log('Subtotal with quantity = ' + this.Subtotal);
     }
   }
@@ -199,7 +233,17 @@ export class CreateOrderHomeComponent implements OnInit {
 
   onRemoveRow(rowIndex: number) {
     this.Subtotal -= this.rows.value[rowIndex].total;
-    this.Tax=this.Subtotal*0.05;
+    this.Tax = this.Subtotal * 0.05;
+    this.OrderTotal = this.Subtotal + this.Tax;
+    this.OrderTotal = Math.round(this.OrderTotal);
+    if (this.OrderTotal == 0) {
+      this.Due = 0;
+      this.Paid = 0;
+    } else {
+      this.Due = this.OrderTotal - this.Paid;
+      this.Due = Math.round(this.Due);
+    }
+
     console.log('Delete with subtotal ' + this.Subtotal);
     this.rows.removeAt(rowIndex);
   }
@@ -214,23 +258,28 @@ export class CreateOrderHomeComponent implements OnInit {
     });
   }
 
-  onDiscountChange(percent:number){
-    this.Percent=percent;
-    let discountAmount=(this.Percent/100)*(this.Subtotal+this.Tax);
+  onDiscountChange(percent: number) {
+    this.Percent = percent;
+    let discountAmount = (this.Percent / 100) * (this.Subtotal + this.Tax);
 
-    this.OrderTotal=(this.Subtotal+this.Tax)-(discountAmount);
-    if(percent==0){
-      this.OrderTotal=this.Subtotal+this.Tax;
+    this.OrderTotal = this.Subtotal + this.Tax - discountAmount;
+    this.OrderTotal = Math.round(this.OrderTotal);
+    if (percent == 0) {
+      this.OrderTotal = this.Subtotal + this.Tax;
+      this.OrderTotal = Math.round(this.OrderTotal);
+      this.Due = this.OrderTotal - this.Paid;
+      this.Due = Math.round(this.Due);
     }
-    if(this.Percent!=0 && this.Paid!=0){
-this.Due=this.OrderTotal-this.Paid;
+    if (this.Percent != 0) {
+      this.Due = this.OrderTotal - this.Paid;
+      this.Due = Math.round(this.Due);
     }
-
   }
 
-  onPaidChange(paid:number){
-    this.Paid=paid;
-    this.Due=this.OrderTotal-paid;
+  onPaidChange(paid: number) {
+    this.Paid = paid;
+    this.Due = this.OrderTotal - paid;
+    this.Due = Math.round(this.Due);
   }
 
   //Snotify Alert
