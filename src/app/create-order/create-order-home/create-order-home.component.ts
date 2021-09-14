@@ -5,6 +5,7 @@ import {
   FormBuilder,
   FormArray,
   FormGroup,
+  NgForm,
 } from '@angular/forms';
 import { ProductList } from 'src/app/common/product-list';
 import { ProductService } from 'src/app/services/product.service';
@@ -39,7 +40,7 @@ export class CreateOrderHomeComponent implements OnInit {
 
   addForm: FormGroup;
   rows: FormArray;
-  ProductListId: number;
+  ProductListId: number=0;
 
   CurrentProduct: Products = new Products();
   SelectedProductList: Array<Products> = [];
@@ -70,6 +71,8 @@ export class CreateOrderHomeComponent implements OnInit {
 
   //for validation Number or Digit
   numberOrdecimalRegEx = /^[1-9]\d*(\.\d+)?$/;
+
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -317,5 +320,21 @@ let SubtotalValue = 0;
   }
   onWarning() {
     this.snotifyService.warning(this.body, this.title, this.getConfig());
+  }
+
+  onSubmit(orderForm:NgForm){
+    if(this.ProductListId==0){
+      this.title = 'Create Order';
+      this.body = 'Please Add Product First';
+      this.onInfo();
+      return;
+    }
+
+    if(orderForm.form.invalid || orderForm.form.value.Paid==0){
+      orderForm.form.markAllAsTouched();
+      return;
+    }
+
+
   }
 }
