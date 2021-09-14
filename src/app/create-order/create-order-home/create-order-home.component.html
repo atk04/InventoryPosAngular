@@ -1,70 +1,94 @@
 <div class="row">
-
   <div class="col-sm-12">
-
     <app-card cardTitle="Create Order">
-
-      <div class="row">
-        <div class="col-md-6 m-b-30 m-t-20">
-          <label for="customerName">Customer Name</label>
-          <div class="input-group">
-            <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="fa fa-user"></i>
-              </span>
-            </div>
-            <input
-              type="text"
-              id="customerName"
-              class="form-control"
-              placeholder="Enter Customer Name"
-            />
-          </div>
-        </div>
-        <div class="col-md-6 m-b-30 m-t-20">
-          <label for="customerName">Date</label>
-          <div class="form-group">
+      <form #orderForm="ngForm" (ngSubmit)="onSubmit(orderForm)">
+        <div class="row">
+          <div class="col-md-6 m-b-30 m-t-20">
+            <label for="customerName">Customer Name</label>
             <div class="input-group">
               <div class="input-group-append">
-                <span class="input-group-text" (click)="d.toggle()">
-                  <i class="fa fa-calendar"></i>
+                <span class="input-group-text">
+                  <i class="fa fa-user"></i>
                 </span>
               </div>
               <input
+                type="text"
+                id="customerName"
                 class="form-control"
-                autocomplete="off"
-                placeholder="yyyy-mm-dd"
-                name="dp"
-                ngbDatepicker
-                #d="ngbDatepicker"
+                placeholder="Enter Customer Name"
+                ngModel
+                name="customerName"
+                #customerName="ngModel"
+                required
               />
+            </div>
+
+            <ng-container *ngIf="orderForm.submitted && customerName.invalid">
+              <br />
+              <div class="alert alert-danger">Customer Name is required</div>
+            </ng-container>
+          </div>
+          <div class="col-md-6 m-b-30 m-t-20">
+            <label for="customerName">Date</label>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="d.toggle()">
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                </div>
+                <input
+                  class="form-control"
+                  autocomplete="off"
+                  placeholder="yyyy-mm-dd"
+                  name="dp"
+                  ngbDatepicker
+                  #d="ngbDatepicker"
+                  ngModel
+                  name="orderDate"
+                  #orderDate="ngModel"
+                  required
+                />
+              </div>
+              <ng-container *ngIf="orderForm.submitted && orderDate.invalid">
+                <br />
+                <div class="alert alert-danger">Order Date is required</div>
+              </ng-container>
             </div>
           </div>
         </div>
-      </div>
-      <div class="row" style="overflow-x:auto;">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Search Product</th>
-              <th>Stock</th>
-              <th>Price</th>
-              <th>Enter Quantity</th>
-              <th>Total</th>
-              <th>
-                <button type="button" mat-raised-button id="plus" (click)="onAddRow()" >
-                  <i class="fa fa-plus"></i>
-                </button>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of addForm.get('rows')?.controls;let index = index;">
-              <td>{{index+1}}</td>
-              <td>
-
-                <!-- <select (change)="onSelectedProduct(index,$event.target.value)"  class="form-control">
+        <div class="row" style="overflow-x: auto">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Search Product</th>
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Enter Quantity</th>
+                <th>Total</th>
+                <th>
+                  <button
+                    type="button"
+                    mat-raised-button
+                    id="plus"
+                    (click)="onAddRow()"
+                  >
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let row of addForm.get('rows')?.controls;
+                  let index = index
+                "
+              >
+                <td>{{ index + 1 }}</td>
+                <td>
+                  <!-- <select (change)="onSelectedProduct(index,$event.target.value)"  class="form-control">
                   <option selected disabled>Select Product</option>
                   <option
                   *ngFor="let tempProductList of ProductList"
@@ -73,198 +97,237 @@
                   {{ tempProductList.name }}
                 </option>
                 </select> -->
-                <ng-select  (change)="onSelectedProduct(index,$event)" [clearable]="false"
-                placeholder="Select your product...">
-                  <ng-option *ngFor="let product of ProductListItem" [value]="product.id"  >{{product.name}}</ng-option>
-                </ng-select>
-              </td>
-              <td>{{ this.rows.value[index].stock}}</td>
-              <td>{{this.rows.value[index].salePrice |currency:'USD'}}</td>
-              <td>
-                <input   class="form-control" (click)="onClickQuantity(index,$event.target.value)"  (keyup)="onClickQuantity(index,$event.target.value)" type="number" min="1"  [value]="this.rows.value[index].quantity"/>
-
-              </td>
-              <td>{{this.rows.value[index].total|currency:'USD'}}</td>
-              <td>
-                <button type="button" mat-raised-button id="times" (click)="onRemoveRow(index)" >
-                  <i class="fa fa-times"></i>
-                </button>
-              </td>
-
-            </tr>
-
-          </tbody>
-        </table>
-        <pre>{{rows.value | json}}</pre>
-      </div>
-      <div class="row">
-        <div class="col-md-6 m-b-30">
-          <label for="subtotal">SubTotal</label>
-          <div class="input-group">
-            <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="fa fa-dollar-sign"></i>
-              </span>
+                  <ng-select
+                    (change)="onSelectedProduct(index, $event)"
+                    [clearable]="false"
+                    placeholder="Select your product..."
+                  >
+                    <ng-option
+                      *ngFor="let product of ProductListItem"
+                      [value]="product.id"
+                      >{{ product.name }}</ng-option
+                    >
+                  </ng-select>
+                </td>
+                <td>{{ this.rows.value[index].stock }}</td>
+                <td>
+                  {{ this.rows.value[index].salePrice | currency: "USD" }}
+                </td>
+                <td>
+                  <input
+                    class="form-control"
+                    (click)="onClickQuantity(index, $event.target.value)"
+                    (keyup)="onClickQuantity(index, $event.target.value)"
+                    type="number"
+                    min="1"
+                    [value]="this.rows.value[index].quantity"
+                  />
+                </td>
+                <td>{{ this.rows.value[index].total | currency: "USD" }}</td>
+                <td>
+                  <button
+                    type="button"
+                    mat-raised-button
+                    id="times"
+                    (click)="onRemoveRow(index)"
+                  >
+                    <i class="fa fa-times"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <pre>{{ rows.value | json }}</pre>
+        </div>
+        <div class="row">
+          <div class="col-md-6 m-b-30">
+            <label for="subtotal">SubTotal</label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa fa-dollar-sign"></i>
+                </span>
+              </div>
+              <input
+                type="text"
+                id="subtotal"
+                class="form-control"
+                placeholder="Subtotal"
+                readonly
+                [value]="Subtotal | number: '1.0-0'"
+              />
             </div>
-            <input
-              type="text"
-              id="subtotal"
-              class="form-control"
-              placeholder="Subtotal"
-              readonly
-              [value]="Subtotal | number :'1.0-0'"
-            />
           </div>
-        </div>
-        <div class="col-md-6 m-b-30">
-          <label for="total">Total</label>
-          <div class="input-group">
-            <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="fa fa-dollar-sign"></i>
-              </span>
+          <div class="col-md-6 m-b-30">
+            <label for="total">Total</label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa fa-dollar-sign"></i>
+                </span>
+              </div>
+              <input
+                type="text"
+                id="total"
+                class="form-control"
+                placeholder="Total"
+                readonly
+                [ngModel]="OrderTotal | number: '2.1-1'"
+                name="OrderTotal"
+              />
             </div>
-            <input
-              type="text"
-              id="total"
-              class="form-control"
-              placeholder="Total"
-              readonly
-              [ngModel]="OrderTotal|number :'2.1-1'"
-            />
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 m-b-30">
-          <label for="tax">Tax (5%)</label>
-          <div class="input-group">
-            <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="fa fa-dollar-sign"></i>
-              </span>
+        <div class="row">
+          <div class="col-md-6 m-b-30">
+            <label for="tax">Tax (5%)</label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa fa-dollar-sign"></i>
+                </span>
+              </div>
+              <input
+                type="text"
+                id="tax"
+                class="form-control"
+                placeholder="Tax"
+                readonly
+                [value]="Tax | number: '1.0-0'"
+              />
             </div>
-            <input
-              type="text"
-              id="tax"
-              class="form-control"
-              placeholder="Tax"
-              readonly
-              [value]="Tax| number :'1.0-0'"
-            />
           </div>
-        </div>
-        <div class="col-md-6 m-b-30">
-          <label for="paid">Paid</label>
-          <div class="input-group">
-            <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="fa fa-dollar-sign"></i>
-              </span>
+          <div class="col-md-6 m-b-30">
+            <label for="paid">Paid</label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa fa-dollar-sign"></i>
+                </span>
+              </div>
+              <input
+                type="number"
+                id="paid"
+                class="form-control"
+                placeholder="Enter Paid"
+                [ngModel]="Paid"
+                (ngModelChange)="onPaidChange($event)"
+                name="Paid"
+                required
+              />
             </div>
-            <input
-              type="number"
-              id="paid"
-              class="form-control"
-              placeholder="Enter Paid"
-              [ngModel]="Paid" (ngModelChange)="onPaidChange($event)"
-            />
+            <ng-container
+              *ngIf="orderForm.submitted && Paid == 0 && OrderTotal != 0"
+            >
+              <br />
+              <div class="alert alert-danger">Paid is required</div>
+            </ng-container>
+
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 m-b-30">
-          <label for="discount">Discount</label>
-          <div class="input-group">
-            <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="fa fa-percent"></i>
-              </span>
+        <div class="row">
+          <div class="col-md-6 m-b-30">
+            <label for="discount">Discount</label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa fa-percent"></i>
+                </span>
+              </div>
+              <input
+                type="number"
+                id="discount"
+                min="0"
+                max="100"
+                class="form-control"
+                placeholder="Enter Discount"
+                [ngModel]="Percent"
+                (ngModelChange)="onDiscountChange($event)"
+                name="Percent"
+              />
             </div>
-            <input
-              type="number"
-              id="discount"
-              min="0"
-              max="100"
-              class="form-control"
-              placeholder="Enter Discount"
-              [ngModel]="Percent" (ngModelChange)="onDiscountChange($event)"
-            />
           </div>
-        </div>
-        <div class="col-md-6 m-b-30">
-          <label for="due">Due</label>
-          <div class="input-group">
-            <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="fa fa-dollar-sign"></i>
-              </span>
+          <div class="col-md-6 m-b-30">
+            <label for="due">Due</label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa fa-dollar-sign"></i>
+                </span>
+              </div>
+              <input
+                type="text"
+                id="due"
+                class="form-control"
+                placeholder="Due"
+                readonly
+                [value]="Due | number: '2.1-1'"
+              />
             </div>
-            <input
-              type="text"
-              id="due"
-              class="form-control"
-              placeholder="Due"
-              readonly
-              [value]="Due | number :'2.1-1'"
-            />
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 m-b-30"></div>
-        <div class="col-md-6 m-b-30">
-          <div class="payment">Payment Method</div>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              class="custom-control-input"
-              id="cash"
-              name="radio-stacked"
-              checked
-              required
-            />
-            <label class="custom-control-label" for="cash">CASH</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              class="custom-control-input"
-              id="card"
-              name="radio-stacked"
-              required
-            />
-            <label class="custom-control-label" for="card">CARD</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              class="custom-control-input"
-              id="check"
-              name="radio-stacked"
-              required
-            />
-            <label class="custom-control-label" for="check">CHECK</label>
+        <div class="row">
+          <div class="col-md-6 m-b-30"></div>
+          <div class="col-md-6 m-b-30">
+            <div class="payment">Payment Method</div>
+            <div class="custom-control custom-radio">
+              <input
+                type="radio"
+                class="custom-control-input"
+                id="cash"
+                name="payment"
+                value="cash"
+                ngModel
+                required
+                #payment="ngModel"
+              />
+              <label class="custom-control-label" for="cash">CASH</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input
+                type="radio"
+                class="custom-control-input"
+                id="card"
+                name="payment"
+                value="card"
+                ngModel
+                required
+                #payment="ngModel"
+              />
+              <label class="custom-control-label" for="card">CARD</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input
+                type="radio"
+                class="custom-control-input"
+                id="check"
+                name="payment"
+                value="check"
+                ngModel
+                required
+                #payment="ngModel"
+              />
+              <label class="custom-control-label" for="check">CHECK</label>
+            </div>
+            <ng-container *ngIf="orderForm.submitted && payment.invalid">
+              <br />
+              <div class="alert alert-danger">Payment Method is required</div>
+            </ng-container>
           </div>
         </div>
-      </div>
-      <div class="row justify-content-center">
-
-
-
-
-        <button mat-raised-button type="button" id="saveOrder"
-        mat-raised-button
-        >
-          Save Order
-        </button>
-      </div>
-
+        <div class="row justify-content-center">
+          <button
+            mat-raised-button
+            type="submit"
+            id="saveOrder"
+            mat-raised-button
+          >
+            Save Order
+          </button>
+        </div>
+      </form>
     </app-card>
-
   </div>
-
-
 </div>
 <div class="row">
   <ng-snotify></ng-snotify>
