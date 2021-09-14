@@ -323,7 +323,11 @@ let SubtotalValue = 0;
   }
 
   onSubmit(orderForm:NgForm){
-    if(this.ProductListId==0){
+    let count=0;
+    for(let i=0;i<this.rows.length;i++){
+      count++;
+    }
+    if(this.ProductListId==0 || count==0){
       this.title = 'Create Order';
       this.body = 'Please Add Product First';
       this.onInfo();
