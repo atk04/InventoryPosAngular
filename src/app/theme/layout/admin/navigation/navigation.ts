@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 export interface NavigationItem {
   id: string;
@@ -38,14 +38,15 @@ const NavigationItems = [
         type: 'item',
         url: '/sample-page',
         classes: 'nav-item',
-        icon: 'feather icon-sidebar'
-      },{
+        icon: 'feather icon-sidebar',
+      },
+      {
         id: 'category-page',
         title: 'Category',
         type: 'item',
         url: '/category-page',
         classes: 'nav-item',
-        icon: 'feather icon-list'
+        icon: 'feather icon-list',
       },
       {
         id: 'product',
@@ -58,27 +59,35 @@ const NavigationItems = [
             title: 'Add Product',
             type: 'item',
             url: '/add-product-page',
-            external: false
+            external: false,
           },
           {
             id: 'product-list-page',
             title: 'Product List',
             type: 'item',
             url: '/product-list-page',
-            external: false
-          }
-        ]
+            external: false,
+          },
+        ],
       },
       {
-        id: 'create-order-page',
-        title: 'Create Order',
-        type: 'item',
-        url: '/create-order-page',
-        classes: 'nav-item',
-        icon: 'feather icon-shopping-cart'
-      }
-    ]
-  }
+        id: 'order',
+        title: 'Order',
+        type: 'collapse',
+        icon: 'feather icon-shopping-cart',
+        children: [
+          {
+            id: 'create-order-page',
+            title: 'Create Order',
+            type: 'item',
+            url: '/create-order-page',
+            external: false,
+          }
+        ],
+      },
+
+    ],
+  },
 ];
 
 @Injectable()
