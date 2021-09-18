@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AddProduct } from '../common/add-product';
+import { OrderProduct } from '../common/order-product';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ import { AddProduct } from '../common/add-product';
 export class ProductApicallService {
 private  createProductUrl='http://localhost:8080/api/product/create';
 private updateProductUrl='http://localhost:8080/api/product/update';
+private updateProductStockUrl='http://localhost:8080/api/product/updateStock';
 private deleteProductByIdUrl='http://localhost:8080/api/product/delete';
   constructor(private httpClient: HttpClient) { }
   saveProduct(formData:FormData):Observable<any>{
@@ -18,6 +20,10 @@ private deleteProductByIdUrl='http://localhost:8080/api/product/delete';
   updateProduct(formData:FormData):Observable<any>{
     return this.httpClient.put(this.updateProductUrl,formData);
    }
+
+   updateProductStock(orderProduct:OrderProduct):Observable<any> {
+    return this.httpClient.put(this.updateProductStockUrl, orderProduct);
+  }
 
   deleteProductById(id:number):Observable<any>{
     const deleteUrl=`${this.deleteProductByIdUrl}?id=${id}`;
