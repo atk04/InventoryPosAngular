@@ -15,6 +15,15 @@ import {
   SnotifyService,
   SnotifyToastConfig,
 } from 'ng-snotify';
+import { OrderProduct } from 'src/app/common/order-product';
+import { ProductApicallService } from 'src/app/services/product-apicall.service';
+import { Invoice } from 'src/app/common/invoice';
+import { InvoiceApicallService } from 'src/app/services/invoice-apicall.service';
+import { InvoiceDetailItem } from 'src/app/common/invoice-detail-item';
+import { InvoiceDetailApiCallService } from 'src/app/services/invoice-detail-api-call.service';
+import { InvoiceDetail } from 'src/app/common/invoice-detail';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-create-order-home',
   templateUrl: './create-order-home.component.html',
@@ -40,7 +49,7 @@ export class CreateOrderHomeComponent implements OnInit {
 
   addForm: FormGroup;
   rows: FormArray;
-  ProductListId: number=0;
+  ProductListId: number = 0;
 
   CurrentProduct: Products = new Products();
   SelectedProductList: Array<Products> = [];
@@ -72,12 +81,43 @@ export class CreateOrderHomeComponent implements OnInit {
   //for validation Number or Digit
   numberOrdecimalRegEx = /^[1-9]\d*(\.\d+)?$/;
 
+  //for orderProduct
+  orderProduct: OrderProduct = new OrderProduct();
 
+
+  //create Invoice
+  invoice: Invoice = new Invoice();
+
+
+
+  //saved invoice
+  //invoiceItem: InvoiceItem=new InvoiceItem();
+  invoiceId: number = 0;
+
+  //create InvoiceDetailItem
+  invoiceDetailItem: InvoiceDetailItem = new InvoiceDetailItem();
+
+  //create InvoiceProduct
+  //productItem: ProductList = new ProductList();
+  productId: number = 0;
+
+  //invoiceDetail
+  invoiceDetail: InvoiceDetail = new InvoiceDetail();
+
+  //orderDate
+  orderDate: NgbDate;
+
+
+  //payment radio
+  payment:string;
 
   constructor(
     private formBuilder: FormBuilder,
     private productService: ProductService,
-    private snotifyService: SnotifyService
+    private snotifyService: SnotifyService,
+    private productApiCallService: ProductApicallService,
+    private invoiceApiCallService: InvoiceApicallService,
+    private invoiceDetailApiCallService: InvoiceDetailApiCallService
   ) {
     this.addForm = this.formBuilder.group({
       items: [null, Validators.required],
@@ -101,6 +141,13 @@ export class CreateOrderHomeComponent implements OnInit {
         Validators.pattern(this.numberOrdecimalRegEx),
       ]),
     });
+    const today = new Date();
+    this.orderDate = new NgbDate(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      today.getDate()
+    );
+
   }
   getProduct() {
     this.productService.getProducts().subscribe((data) => {
@@ -194,21 +241,19 @@ export class CreateOrderHomeComponent implements OnInit {
       this.rows.value[index].total =
         this.rows.value[index].quantity * this.rows.value[index].salePrice;
 
-//recalculate the order
-let SubtotalValue = 0;
-        for (let i = 0; i < this.rows.length; i++) {
-          SubtotalValue += this.rows.value[i].total;
-        }
-        this.Subtotal = SubtotalValue;
-        this.Tax = this.Subtotal * 0.05;
+      //recalculate the order
+      let SubtotalValue = 0;
+      for (let i = 0; i < this.rows.length; i++) {
+        SubtotalValue += this.rows.value[i].total;
+      }
+      this.Subtotal = SubtotalValue;
+      this.Tax = this.Subtotal * 0.05;
 
-        this.OrderTotal = this.Subtotal + this.Tax;
-        this.OrderTotal = Math.round(this.OrderTotal);
-        this.onDiscountChange(this.Percent);
-        this.Due = this.OrderTotal - this.Paid;
-        this.Due = Math.round(this.Due);
-
-
+      this.OrderTotal = this.Subtotal + this.Tax;
+      this.OrderTotal = Math.round(this.OrderTotal);
+      this.onDiscountChange(this.Percent);
+      this.Due = this.OrderTotal - this.Paid;
+      this.Due = Math.round(this.Due);
     } else {
       this.rows.value[index].total =
         quantity * this.rows.value[index].salePrice;
@@ -322,22 +367,99 @@ let SubtotalValue = 0;
     this.snotifyService.warning(this.body, this.title, this.getConfig());
   }
 
-  onSubmit(orderForm:NgForm){
-    let count=0;
-    for(let i=0;i<this.rows.length;i++){
+  onSubmit(orderForm: NgForm) {
+
+
+      let count = 0;
+    for (let i = 0; i < this.rows.length; i++) {
       count++;
     }
-    if(this.ProductListId==0 || count==0){
+
+    if (this.ProductListId == 0 || count == 0) {
       this.title = 'Create Order';
       this.body = 'Please Add Product First';
       this.onInfo();
       return;
     }
 
-    if(orderForm.form.invalid || orderForm.form.value.Paid==0){
-      orderForm.form.markAllAsTouched();
-      return;
+
+
+
+
+
+    for (let i = 0; i < this.rows.length; i++) {
+      this.productService
+        .getProductById(this.rows.value[i].id)
+        .subscribe((data) => {
+          this.orderProduct.id = +data.id;
+          this.orderProduct.stock = data.stock - this.rows.value[i].quantity;
+
+          this.productApiCallService
+            .updateProductStock(this.orderProduct)
+            .subscribe();
+
+
+          this.orderProduct = new OrderProduct();
+        });
+
     }
+
+    this.invoice.customerName = orderForm.value.customerName;
+
+    this.invoice.orderDate = new Date(
+      orderForm.value.orderDate.year,
+      orderForm.value.orderDate.month - 1,
+      orderForm.value.orderDate.day
+    );
+    this.invoice.subTotal = this.Subtotal;
+    this.invoice.tax = this.Tax;
+    this.invoice.discount = orderForm.value.Percent;
+    this.invoice.total = this.OrderTotal;
+    this.invoice.paid = orderForm.value.Paid;
+    this.invoice.due = this.Due;
+    this.invoice.paymentType = orderForm.value.payment;
+    console.log('Inser order Date =' + this.invoice.orderDate);
+    this.invoiceApiCallService.saveInvoice(this.invoice).subscribe((data) => {
+      this.invoiceId = +data.id;
+
+
+      for (let i = 0; i < this.rows.length; i++) {
+        console.log('Product Id =' + this.rows.value[i].id);
+        this.productService
+          .getProductById(this.rows.value[i].id)
+          .subscribe((data) => {
+            this.productId = +data.id;
+
+
+            this.invoiceDetailItem.productName = data.name;
+            this.invoiceDetailItem.productPrice = data.salePrice;
+            this.invoiceDetailItem.productQuantity =
+              this.rows.value[i].quantity;
+            this.invoiceDetailItem.orderDate = this.invoice.orderDate;
+
+
+            this.invoiceDetail.invoiceDetailItem = this.invoiceDetailItem;
+            this.invoiceDetail.invoiceId = this.invoiceId;
+            this.invoiceDetail.productId = this.productId;
+
+
+
+            this.invoiceDetailApiCallService
+              .createInvoiceDetail(this.invoiceDetail)
+              .subscribe({
+                next: (response) => {
+                  this.title = 'Create Order';
+                  this.body = 'Customer Name: ' + this.invoice.customerName;
+                  this.onSuccess();
+                }
+              });
+
+          });
+      }
+
+
+    });
+
 
 
   }

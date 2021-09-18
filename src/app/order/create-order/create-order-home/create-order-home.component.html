@@ -41,19 +41,17 @@
                   class="form-control"
                   autocomplete="off"
                   placeholder="yyyy-mm-dd"
-                  name="dp"
                   ngbDatepicker
                   #d="ngbDatepicker"
-                  ngModel
+                  [(ngModel)]="orderDate"
                   name="orderDate"
-                  #orderDate="ngModel"
                   required
                 />
               </div>
-              <ng-container *ngIf="orderForm.submitted && orderDate.invalid">
+              <!-- <ng-container *ngIf="orderForm.submitted">
                 <br />
                 <div class="alert alert-danger">Order Date is required</div>
-              </ng-container>
+              </ng-container> -->
             </div>
           </div>
         </div>
@@ -138,6 +136,8 @@
             </tbody>
           </table>
           <pre>{{ rows.value | json }}</pre>
+
+
         </div>
         <div class="row">
           <div class="col-md-6 m-b-30">
@@ -276,9 +276,8 @@
                 id="cash"
                 name="payment"
                 value="cash"
-                ngModel
-                required
-                #payment="ngModel"
+               checked
+               ngModel
               />
               <label class="custom-control-label" for="cash">CASH</label>
             </div>
@@ -290,8 +289,7 @@
                 name="payment"
                 value="card"
                 ngModel
-                required
-                #payment="ngModel"
+
               />
               <label class="custom-control-label" for="card">CARD</label>
             </div>
@@ -301,18 +299,18 @@
                 class="custom-control-input"
                 id="check"
                 name="payment"
-                value="check"
-                ngModel
-                required
-                #payment="ngModel"
+               value="check"
+               ngModel
+
+
               />
               <label class="custom-control-label" for="check">CHECK</label>
             </div>
-            <ng-container *ngIf="orderForm.submitted && payment.invalid">
+            <!-- <ng-container *ngIf="orderForm.submitted && payment.invalid">
               <br />
               <br />
               <div class="alert alert-danger">Payment Method is required</div>
-            </ng-container>
+            </ng-container> -->
           </div>
         </div>
         <div class="row justify-content-center">
