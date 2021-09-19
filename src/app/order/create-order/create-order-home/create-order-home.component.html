@@ -45,7 +45,7 @@
                   #d="ngbDatepicker"
                   [(ngModel)]="orderDate"
                   name="orderDate"
-                  required
+                  readonly
                 />
               </div>
               <!-- <ng-container *ngIf="orderForm.submitted">
@@ -55,7 +55,7 @@
             </div>
           </div>
         </div>
-        <div class="row" style="overflow-x: auto">
+        <div class="row">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -86,15 +86,6 @@
               >
                 <td>{{ index + 1 }}</td>
                 <td>
-                  <!-- <select (change)="onSelectedProduct(index,$event.target.value)"  class="form-control">
-                  <option selected disabled>Select Product</option>
-                  <option
-                  *ngFor="let tempProductList of ProductList"
-                  [value]="tempProductList.id"
-                >
-                  {{ tempProductList.name }}
-                </option>
-                </select> -->
                   <ng-select
                     (change)="onSelectedProduct(index, $event)"
                     [clearable]="false"
@@ -107,7 +98,14 @@
                     >
                   </ng-select>
                 </td>
-                <td>{{ this.rows.value[index].stock }}</td>
+                <td *ngIf="this.rows.value[index].stock!=0">{{ this.rows.value[index].stock }}</td>
+                <td *ngIf="this.rows.value[index].stock==0"><button
+                  mat-raised-button
+                  type="button"
+                  mat-raised-button
+                >
+                  Update Stock
+                </button> </td>
                 <td>
                   {{ this.rows.value[index].salePrice | currency: "USD" }}
                 </td>
@@ -135,7 +133,6 @@
               </tr>
             </tbody>
           </table>
-          <pre>{{ rows.value | json }}</pre>
 
 
         </div>
@@ -206,7 +203,7 @@
                 </span>
               </div>
               <input
-                type="number"
+                type="text"
                 id="paid"
                 class="form-control"
                 placeholder="Enter Paid"
@@ -214,6 +211,7 @@
                 (ngModelChange)="onPaidChange($event)"
                 name="Paid"
                 required
+                [disabled]="disabledText"
               />
             </div>
             <ng-container
@@ -243,6 +241,7 @@
                 [ngModel]="Percent"
                 (ngModelChange)="onDiscountChange($event)"
                 name="Percent"
+                [disabled]="disabledText"
               />
             </div>
           </div>

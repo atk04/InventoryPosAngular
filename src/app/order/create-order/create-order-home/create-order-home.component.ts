@@ -110,6 +110,8 @@ export class CreateOrderHomeComponent implements OnInit {
   //order message
   orderMessage='';
 
+  //disable text box
+  disabledText=true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -217,6 +219,13 @@ export class CreateOrderHomeComponent implements OnInit {
 
       this.CurrentProduct = new Products();
     });
+
+    //for disable textbox
+    if(this.rows.length==0){
+      this.disabledText=true;
+    }else{
+      this.disabledText=false;
+    }
   }
 
   onClickQuantity(index: number, quantity: number) {
@@ -239,6 +248,7 @@ export class CreateOrderHomeComponent implements OnInit {
       this.rows.value[index].quantity = +1;
       this.rows.value[index].total =
         this.rows.value[index].quantity * this.rows.value[index].salePrice;
+
 
       //recalculate the order
       let SubtotalValue = 0;
@@ -272,6 +282,14 @@ export class CreateOrderHomeComponent implements OnInit {
   }
 
   onAddRow() {
+    if(this.rows.length!=0 && this.rows.value[0].id==null ){
+      this.title = 'Create Order';
+      this.body = 'Please Add Product First';
+      this.disabledText=false;
+      this.onInfo();
+      return;
+    }
+    this.disabledText=false;
     this.ProductListId = 0;
     this.addForm.addControl('rows', this.rows);
 
@@ -279,6 +297,9 @@ export class CreateOrderHomeComponent implements OnInit {
   }
 
   onRemoveRow(rowIndex: number) {
+    if(this.rows.length===0 || this.ProductListId==0||rowIndex==0){
+      this.disabledText=true;
+    }
     this.Subtotal -= this.rows.value[rowIndex].total;
     this.Tax = this.Subtotal * 0.05;
     this.OrderTotal = this.Subtotal + this.Tax;
@@ -367,6 +388,16 @@ export class CreateOrderHomeComponent implements OnInit {
   }
 
   onSubmit(orderForm: NgForm) {
+
+    if(orderForm.control.invalid){
+      orderForm.form.markAllAsTouched();
+      return;
+    }
+
+
+
+
+
     let count = 0;
     for (let i = 0; i < this.rows.length; i++) {
       count++;
@@ -377,6 +408,28 @@ export class CreateOrderHomeComponent implements OnInit {
       this.body = 'Please Add Product First';
       this.onInfo();
       return;
+    }
+
+    if(this.Paid==0){
+      this.title = 'Create Order';
+    this.body = 'You must paid your order';
+    this.onWarning();
+      return;
+    }
+
+    let emptyStock=false;
+    for(let i=0;i<this.rows.length;i++){
+      if(this.rows.value[i].stock==0){
+        emptyStock=true;
+        break;
+      }
+    }
+
+    if(emptyStock==true){
+      this.title = 'Create Order';
+    this.body = 'Please update your empty product stock first';
+    this.onWarning();
+    return;
     }
 
     for (let i = 0; i < this.rows.length; i++) {
