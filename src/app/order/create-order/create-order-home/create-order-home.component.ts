@@ -251,7 +251,6 @@ export class CreateOrderHomeComponent implements OnInit {
       this.rows.value[index].total =
         this.rows.value[index].quantity * this.rows.value[index].salePrice;
 
-
       //recalculate the order
       let SubtotalValue = 0;
       for (let i = 0; i < this.rows.length; i++) {
