@@ -23,6 +23,7 @@ import { InvoiceDetailItem } from 'src/app/common/invoice-detail-item';
 import { InvoiceDetailApiCallService } from 'src/app/services/invoice-detail-api-call.service';
 import { InvoiceDetail } from 'src/app/common/invoice-detail';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { InvoiceService } from 'src/app/services/invoice.service';
 
 @Component({
   selector: 'app-create-order-home',
@@ -119,7 +120,8 @@ export class CreateOrderHomeComponent implements OnInit {
     private snotifyService: SnotifyService,
     private productApiCallService: ProductApicallService,
     private invoiceApiCallService: InvoiceApicallService,
-    private invoiceDetailApiCallService: InvoiceDetailApiCallService
+    private invoiceDetailApiCallService: InvoiceDetailApiCallService,
+    private invoiceService:InvoiceService
   ) {
     this.addForm = this.formBuilder.group({
       items: [null, Validators.required],
@@ -485,17 +487,25 @@ export class CreateOrderHomeComponent implements OnInit {
 
             this.invoiceDetailApiCallService
               .createInvoiceDetail(this.invoiceDetail)
-              .subscribe(
-                response=>this.orderMessage=response.message
-              );
+              .subscribe();
 
           });
 
       }
 
+      console.log(this.invoiceId)
+      this.invoiceService.getInvoiceByInvoiceId(this.invoiceId).subscribe((data)=>{
+        let savedInvoiceId=+data.id;
+        if(this.invoiceId==savedInvoiceId){
+          this.title = 'Create Order';
+          this.body = 'Name: '+data.customerName;
+          this.onSuccess();
+        }
+      })
 
 
-      console.log("Order Message=" +this.orderMessage);
     });
+
+
   }
 }
