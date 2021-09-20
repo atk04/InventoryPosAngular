@@ -411,9 +411,11 @@ export class CreateOrderHomeComponent implements OnInit {
       return;
     }
 
-    if(this.Paid==0){
+    let numberPatten = new RegExp(/[1-9]\d*/);
+
+    if(this.Paid==0|| !numberPatten.test(orderForm.value.Paid)){
       this.title = 'Create Order';
-    this.body = 'You must paid your order';
+    this.body = 'Please fill your paid amount';
     this.onWarning();
       return;
     }
