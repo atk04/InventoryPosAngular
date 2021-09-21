@@ -82,6 +82,13 @@ const NavigationItems = [
             type: 'item',
             url: '/create-order-page',
             external: false,
+          },
+          {
+            id: 'create-order-list-page',
+            title: 'Order List',
+            type: 'item',
+            url: '/order-list-page',
+            external: false,
           }
         ],
       },

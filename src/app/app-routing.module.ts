@@ -28,6 +28,9 @@ const routes: Routes = [
       },
       {
         path:'create-order-page',loadChildren:()=>import('./order/create-order/create-order.module').then(module=>module.CreateOrderModule)
+      },
+      {
+        path:'order-list-page',loadChildren:()=>import('./order/order-list/order-list.module').then(module=>module.OrderListModule)
       }
     ]
   },

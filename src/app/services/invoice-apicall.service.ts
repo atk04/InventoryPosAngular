@@ -12,4 +12,9 @@ private createInvoiceUrl='http://localhost:8080/api/order/createInvoice';
   saveInvoice(invoice:Invoice):Observable<any>{
     return this.httpClient.post(this.createInvoiceUrl, invoice);
   }
+
+  getInvoiceOrderByIdDesc():Observable<any>{
+    const searchUrl='http://localhost:8080/api/order/orderList';
+    return this.httpClient.get(searchUrl);
+  }
 }
