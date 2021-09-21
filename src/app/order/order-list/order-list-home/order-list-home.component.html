@@ -61,7 +61,18 @@
 
             </tbody>
           </table>
+          <ng-container *ngIf="orderList.length != 0">
+            <mat-paginator
+              [length]="length"
+              [pageSize]="pageSize"
+              [pageSizeOptions]="pageSizeOptions"
+              (page)="onPaginate($event)"
+            >
+            </mat-paginator>
+          </ng-container>
         </div>
+
+
       </div>
     </app-card>
   </div>

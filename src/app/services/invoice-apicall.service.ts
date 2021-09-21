@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Invoice } from '../common/invoice';
+import { SaveInvoice } from '../common/save-invoice';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,16 @@ private createInvoiceUrl='http://localhost:8080/api/order/createInvoice';
     return this.httpClient.post(this.createInvoiceUrl, invoice);
   }
 
-  getInvoiceOrderByIdDesc():Observable<any>{
-    const searchUrl='http://localhost:8080/api/order/orderList';
-    return this.httpClient.get(searchUrl);
+  getInvoiceOrderByIdDescPaginate(thePage:number,thePageSize:number):Observable<GetInvoiceListResponse>{
+    const searchUrl=`http://localhost:8080/api/order/orderList?page=${thePage}&size=${thePageSize}`;
+    return this.httpClient.get<GetInvoiceListResponse>(searchUrl);
   }
+}
+
+interface GetInvoiceListResponse{
+  "content":SaveInvoice[],
+  "totalPages": number,
+    "totalElements": number,
+    "size": number,
+    "number": number,
 }
