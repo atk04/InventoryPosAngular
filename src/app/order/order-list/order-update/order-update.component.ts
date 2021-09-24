@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import {
+  SnotifyPosition,
+  SnotifyService,
+  SnotifyToastConfig,
+} from 'ng-snotify';
+
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import {
   FormControl,
   Validators,
@@ -7,31 +16,25 @@ import {
   FormGroup,
   NgForm,
 } from '@angular/forms';
-import { ProductList } from 'src/app/common/product-list';
-import { ProductService } from 'src/app/services/product.service';
-import { Products } from 'src/app/common/products';
-import {
-  SnotifyPosition,
-  SnotifyService,
-  SnotifyToastConfig,
-} from 'ng-snotify';
-import { OrderProduct } from 'src/app/common/order-product';
-import { ProductApicallService } from 'src/app/services/product-apicall.service';
 import { Invoice } from 'src/app/common/invoice';
-import { InvoiceApicallService } from 'src/app/services/invoice-apicall.service';
-import { InvoiceDetailItem } from 'src/app/common/invoice-detail-item';
-import { InvoiceDetailApiCallService } from 'src/app/services/invoice-detail-api-call.service';
 import { InvoiceDetail } from 'src/app/common/invoice-detail';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { InvoiceDetailItem } from 'src/app/common/invoice-detail-item';
+import { OrderProduct } from 'src/app/common/order-product';
+import { ProductList } from 'src/app/common/product-list';
+import { Products } from 'src/app/common/products';
+import { InvoiceApicallService } from 'src/app/services/invoice-apicall.service';
+import { InvoiceDetailApiCallService } from 'src/app/services/invoice-detail-api-call.service';
 import { InvoiceService } from 'src/app/services/invoice.service';
-import { Router } from '@angular/router';
+import { ProductApicallService } from 'src/app/services/product-apicall.service';
+import { ProductService } from 'src/app/services/product.service';
+import { OrderList } from 'src/app/common/order-list';
 
 @Component({
-  selector: 'app-create-order-home',
-  templateUrl: './create-order-home.component.html',
-  styleUrls: ['./create-order-home.component.scss'],
+  selector: 'app-order-update',
+  templateUrl: './order-update.component.html',
+  styleUrls: ['./order-update.component.scss'],
 })
-export class CreateOrderHomeComponent implements OnInit {
+export class OrderUpdateComponent implements OnInit {
   //Snotify Message
   style = 'material';
   title = 'Alert Message';
@@ -58,6 +61,9 @@ export class CreateOrderHomeComponent implements OnInit {
   ProductList: ProductList[] = [];
 
   ProductListItem: ProductList[] = [];
+
+  //Customer Name
+  customerName: String;
 
   //Subtotal
   Subtotal: number = 0;
@@ -107,22 +113,33 @@ export class CreateOrderHomeComponent implements OnInit {
   orderDate: NgbDate;
 
   //payment radio
-  payment = 'cash';
+  payment: String = 'cash';
 
   //order message
-  orderMessage='';
+  orderMessage = '';
 
   //disable text box
-  disabledText=true;
+  disabledText = false;
+
+  private routeSub: Subscription;
+
+  //Order list for update
+  orderList: OrderList[] = [];
+
+  //Stored Remove Product
+  removeStock: OrderProduct[] = [];
+
+  filterStock: OrderProduct[] = [];
 
   constructor(
+    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private productService: ProductService,
     private snotifyService: SnotifyService,
     private productApiCallService: ProductApicallService,
     private invoiceApiCallService: InvoiceApicallService,
     private invoiceDetailApiCallService: InvoiceDetailApiCallService,
-    private invoiceService:InvoiceService,
+    private invoiceService: InvoiceService,
     private router: Router,
   ) {
     this.addForm = this.formBuilder.group({
@@ -132,6 +149,43 @@ export class CreateOrderHomeComponent implements OnInit {
   }
   productOrderForm: FormGroup;
   ngOnInit(): void {
+    this.routeSub = this.route.params.subscribe((params) => {
+      this.invoiceId = +params['id'];
+      //console.log(this.invoiceId)
+
+      this.invoiceDetailApiCallService
+        .getInvoiceDetailById(this.invoiceId)
+        .subscribe((data) => {
+          this.orderList = data;
+
+          for (let i = 0; i < this.orderList.length; i++) {
+            // console.log(this.orderList[i]);
+            this.customerName = this.orderList[i].invoice.customerName;
+            this.Subtotal = this.orderList[i].invoice.subTotal;
+            this.Tax = this.orderList[i].invoice.tax;
+            this.Percent = this.orderList[i].invoice.discount;
+            this.OrderTotal = this.orderList[i].invoice.total;
+            this.Paid = this.orderList[i].invoice.paid;
+            this.Due = this.orderList[i].invoice.due;
+            this.payment = this.orderList[i].invoice.paymentType;
+
+            this.addForm.addControl('rows', this.rows);
+
+            this.rows.push(this.createItemFormGroup());
+
+            this.ProductListId = this.orderList[i].product.id;
+            this.rows.value[i].id = this.orderList[i].product.id;
+            this.rows.value[i].name = this.orderList[i].product.name;
+            this.rows.value[i].stock = this.orderList[i].product.stock;
+            this.rows.value[i].salePrice = this.orderList[i].product.salePrice;
+            this.rows.value[i].quantity = this.orderList[i].productQuantity;
+            this.rows.value[i].total =
+              this.rows.value[i].quantity * this.rows.value[i].salePrice;
+          }
+        });
+
+    });
+
     this.addForm.get('items').valueChanges.subscribe((val) => {
       if (val === true) {
         this.addForm.addControl('rows', this.rows);
@@ -165,7 +219,6 @@ export class CreateOrderHomeComponent implements OnInit {
   }
 
   onSelectedProduct(index: number, id: number) {
-
     this.ProductListId = +id;
     let currentId = this.ProductListId;
     this.productService.getProductById(currentId).subscribe((data) => {
@@ -192,6 +245,7 @@ export class CreateOrderHomeComponent implements OnInit {
           break;
         } else {
           this.rows.value[index].id = this.ProductListId;
+          this.rows.value[index].name = this.CurrentProduct.name;
           this.rows.value[index].stock = this.CurrentProduct.stock;
           this.rows.value[index].salePrice = this.CurrentProduct.salePrice;
           this.rows.value[index].quantity = +1;
@@ -225,10 +279,10 @@ export class CreateOrderHomeComponent implements OnInit {
     });
 
     //for disable textbox
-    if(this.rows.length==0){
-      this.disabledText=true;
-    }else{
-      this.disabledText=false;
+    if (this.rows.length == 0) {
+      this.disabledText = true;
+    } else {
+      this.disabledText = false;
     }
   }
 
@@ -280,28 +334,32 @@ export class CreateOrderHomeComponent implements OnInit {
       this.OrderTotal = Math.round(this.OrderTotal);
       this.Due = this.OrderTotal - this.Paid;
       this.Due = Math.round(this.Due);
-     // console.log('Subtotal with quantity = ' + this.Subtotal);
+      // console.log('Subtotal with quantity = ' + this.Subtotal);
     }
   }
 
   onAddRow() {
-    if(this.rows.length!=0 && this.rows.value[0].id==null ){
-      this.title = 'Create Order';
-      this.body = 'Please Add Product First';
-      this.disabledText=false;
-      this.onInfo();
-      return;
-    }
-    this.disabledText=false;
+    // if (
+    //   this.rows.length == 0 &&
+    //   this.rows.value[0].id == null &&
+    //   this.orderList.length == 0
+    // ) {
+    //   this.title = 'Create Order';
+    //   this.body = 'Please Add Product First';
+    //   this.disabledText = false;
+    //   this.onInfo();
+    //   return;
+    // }
+    this.disabledText = false;
     this.ProductListId = 0;
     this.addForm.addControl('rows', this.rows);
-
     this.rows.push(this.createItemFormGroup());
   }
 
-  onRemoveRow(rowIndex: number) {
-    if(this.rows.length===0 || this.ProductListId==0||rowIndex==0){
-      this.disabledText=true;
+  onRemoveRow(rowIndex: number, productId?: number) {
+    //console.log('RowIndex = ' + rowIndex);
+    if (this.rows.length == 0) {
+      this.disabledText = true;
     }
     this.Subtotal -= this.rows.value[rowIndex].total;
     this.Tax = this.Subtotal * 0.05;
@@ -315,13 +373,39 @@ export class CreateOrderHomeComponent implements OnInit {
       this.Due = Math.round(this.Due);
     }
 
-   // console.log('Delete with subtotal ' + this.Subtotal);
+    // console.log('Delete with subtotal ' + this.Subtotal);
     this.rows.removeAt(rowIndex);
+
+    for (let i = 0; i < this.orderList.length; i++) {
+      if (this.orderList[i].product.id == productId) {
+        let removeProductStock =
+          this.orderList[i].product.stock + this.orderList[i].productQuantity;
+
+        let orderProductItem = new OrderProduct();
+        orderProductItem.id = productId;
+        orderProductItem.stock = removeProductStock;
+
+        this.removeStock.push(orderProductItem);
+        orderProductItem = new OrderProduct();
+        break;
+
+        //console.log("Remove Product Id = "+removeProductId);
+      }
+    }
+    let uniq = {};
+    this.filterStock = this.removeStock.filter(
+      (obj) => !uniq[obj.id] && (uniq[obj.id] = true)
+    );
+
+    for (let i = 0; i < this.filterStock.length; i++) {
+      console.log(this.filterStock[i]);
+    }
   }
 
   createItemFormGroup(): FormGroup {
     return this.formBuilder.group({
       id: null,
+      name: null,
       stock: null,
       salePrice: null,
       quantity: null,
@@ -390,67 +474,123 @@ export class CreateOrderHomeComponent implements OnInit {
     this.snotifyService.warning(this.body, this.title, this.getConfig());
   }
 
-  onSubmit(orderForm: NgForm) {
-
-    if(orderForm.control.invalid){
+  onUpdate(orderForm: NgForm) {
+    if (orderForm.control.invalid) {
       orderForm.form.markAllAsTouched();
       return;
     }
-
-
-
-
 
     let count = 0;
     for (let i = 0; i < this.rows.length; i++) {
       count++;
     }
 
-    if (this.ProductListId == 0 || count == 0) {
+    if (count == 0) {
       this.title = 'Create Order';
       this.body = 'Please Add Product First';
       this.onInfo();
       return;
     }
+    for (let i = 0; i < this.rows.length; i++) {
+      if(this.rows.value[i].id==null){
+        this.title = 'Create Order';
+      this.body = 'Please select Product';
+      this.onWarning();
+      return;
+      }
+    }
 
     let numberPatten = new RegExp(/[1-9]\d*/);
 
-    if(this.Paid==0|| !numberPatten.test(orderForm.value.Paid)){
+    if (!numberPatten.test(orderForm.value.Paid)) {
       this.title = 'Create Order';
-    this.body = 'Please fill your paid amount';
-    this.onWarning();
+      this.body = 'Please fill your paid amount';
+      this.onWarning();
       return;
     }
 
-    let emptyStock=false;
-    for(let i=0;i<this.rows.length;i++){
-      if(this.rows.value[i].stock==0){
-        emptyStock=true;
+    let emptyStock = false;
+    for (let i = 0; i < this.rows.length; i++) {
+      if (this.rows.value[i].stock == 0) {
+        emptyStock = true;
         break;
       }
     }
 
-    if(emptyStock==true){
+    if (emptyStock == true) {
       this.title = 'Create Order';
-    this.body = 'Please update your empty product stock first';
-    this.onWarning();
-    return;
+      this.body = 'Please update your empty product stock first';
+      this.onWarning();
+      return;
     }
+    ///////////---------
+
+    ///start Here
+    //first recalculate remaining save product count
+    let remainCount = 0;
 
     for (let i = 0; i < this.rows.length; i++) {
-      this.productService
-        .getProductById(this.rows.value[i].id)
-        .subscribe((data) => {
-          this.orderProduct.id = +data.id;
-          this.orderProduct.stock = data.stock - this.rows.value[i].quantity;
+      let currentRowId = this.rows.value[i].id;
 
-          this.productApiCallService
-            .updateProductStock(this.orderProduct)
-            .subscribe();
+      for (let j = 0; j < this.orderList.length; j++) {
+        if (currentRowId == this.orderList[j].product.id) {
+          if (this.rows.value[i].quantity > this.orderList[j].productQuantity) {
+            this.rows.value[i].stock =
+              this.rows.value[i].stock -
+              (this.rows.value[i].quantity - this.orderList[j].productQuantity);
+            this.orderList[j].productQuantity = this.rows.value[i].quantity;
+          }
+          if (this.rows.value[i].quantity < this.orderList[j].productQuantity) {
+            this.rows.value[i].stock =
+              this.rows.value[i].stock +
+              (this.orderList[j].productQuantity - this.rows.value[i].quantity);
+            this.orderList[j].productQuantity = this.rows.value[i].quantity;
+          }
 
-          this.orderProduct = new OrderProduct();
-        });
+          remainCount++;
+        }
+      }
     }
+
+    for (let i = remainCount; i < this.rows.length; i++) {
+      this.rows.value[i].stock =
+        this.rows.value[i].stock - this.rows.value[i].quantity;
+    }
+
+    this.invoiceDetailApiCallService
+      .deleteInvoiceById(this.invoiceId)
+      .subscribe();
+
+
+
+    //Update stock amount to product table
+    for (let i = 0; i < this.rows.length; i++) {
+      this.orderProduct.id = this.rows.value[i].id;
+      this.orderProduct.stock = this.rows.value[i].stock;
+      this.productApiCallService
+        .updateProductStock(this.orderProduct)
+        .subscribe();
+
+      this.orderProduct = new OrderProduct();
+    }
+
+
+    //Update stock for deleted save product stock
+    for (let i = 0; i < this.filterStock.length; i++) {
+      this.orderProduct.id = this.filterStock[i].id;
+      this.orderProduct.stock = this.filterStock[i].stock;
+      this.productApiCallService
+        .updateProductStock(this.orderProduct)
+        .subscribe();
+
+      this.orderProduct = new OrderProduct();
+    }
+
+
+
+
+
+      //Insert data to invoice and invoice detail table
 
     this.invoice.customerName = orderForm.value.customerName;
 
@@ -471,7 +611,6 @@ export class CreateOrderHomeComponent implements OnInit {
       this.invoiceId = +data.id;
 
       for (let i = 0; i < this.rows.length; i++) {
-
         this.productService
           .getProductById(this.rows.value[i].id)
           .subscribe((data) => {
@@ -487,31 +626,40 @@ export class CreateOrderHomeComponent implements OnInit {
             this.invoiceDetail.invoiceId = this.invoiceId;
             this.invoiceDetail.productId = this.productId;
 
-
             this.invoiceDetailApiCallService
               .createInvoiceDetail(this.invoiceDetail)
               .subscribe();
-
           });
-
       }
 
-
-      this.invoiceService.getInvoiceByInvoiceId(this.invoiceId).subscribe((data)=>{
-        let savedInvoiceId=+data.id;
-        if(this.invoiceId==savedInvoiceId){
-          this.title = 'Create Order';
-          this.body = 'Name: '+data.customerName;
-          this.onSuccess();
+      //check update success or not
+      this.invoiceService
+        .getInvoiceByInvoiceId(this.invoiceId)
+        .subscribe((data) => {
+          let savedInvoiceId = +data.id;
+          if (this.invoiceId == savedInvoiceId) {
+            this.title = 'Update Order';
+            this.body = 'Name: ' + data.customerName;
+            this.onSuccess();
+          }
           setTimeout(() => {
-            this.router.navigate(['/', 'order-list-page']);
-            },2500);
-        }
-      })
-
-
+          this.router.navigate(['/', 'order-list-page']);
+          },2500);
+        });
     });
 
 
+
+
+
+   // this.router.navigate(['order-list-page'],{relativeTo:this.activatedRoute});
+
   }
+}
+
+function convert(str) {
+  var date = new Date(str),
+    mnth = ('0' + (date.getMonth() + 1)).slice(-2),
+    day = ('0' + date.getDate()).slice(-2);
+  return [date.getFullYear(), mnth, day].join('-');
 }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { OrderListRoutingModule } from './order-list-routing.module';
 import { OrderListHomeComponent } from './order-list-home/order-list-home.component';
+import { OrderUpdateComponent } from './order-update/order-update.component';
+import {NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
+import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 const materialModules = [
   MatButtonModule,
@@ -18,12 +22,17 @@ const materialModules = [
 ];
 
 @NgModule({
-  declarations: [OrderListHomeComponent],
+  declarations: [OrderListHomeComponent, OrderUpdateComponent],
   imports: [
     CommonModule,
     OrderListRoutingModule,
     SharedModule,
-    materialModules
-  ]
+    materialModules,
+    NgbDatepickerModule,
+    SnotifyModule,
+    NgSelectModule
+  ],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA],
+  providers: [{ provide: 'SnotifyToastConfig', useValue: ToastDefaults }, SnotifyService]
 })
 export class OrderListModule { }
