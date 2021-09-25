@@ -230,6 +230,11 @@ export class CreateOrderHomeComponent implements OnInit {
     }else{
       this.disabledText=false;
     }
+    //for reenter paid amount
+    this.Paid=0;
+
+    //for Due
+    this.Due=this.OrderTotal;
   }
 
   onClickQuantity(index: number, quantity: number) {
@@ -282,6 +287,11 @@ export class CreateOrderHomeComponent implements OnInit {
       this.Due = Math.round(this.Due);
      // console.log('Subtotal with quantity = ' + this.Subtotal);
     }
+
+    //for reenter paid amount
+    this.Paid=0;
+    //for Due
+    this.Due=this.OrderTotal;
   }
 
   onAddRow() {
