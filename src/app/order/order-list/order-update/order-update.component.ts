@@ -284,6 +284,12 @@ export class OrderUpdateComponent implements OnInit {
     } else {
       this.disabledText = false;
     }
+
+     //for reenter paid amount
+     this.Paid=0;
+
+     //for Due
+    this.Due=this.OrderTotal;
   }
 
   onClickQuantity(index: number, quantity: number) {
@@ -336,6 +342,12 @@ export class OrderUpdateComponent implements OnInit {
       this.Due = Math.round(this.Due);
       // console.log('Subtotal with quantity = ' + this.Subtotal);
     }
+
+    //for reenter paid amount
+    this.Paid=0;
+
+    //for Due
+    this.Due=this.OrderTotal;
   }
 
   onAddRow() {
@@ -354,6 +366,8 @@ export class OrderUpdateComponent implements OnInit {
     this.ProductListId = 0;
     this.addForm.addControl('rows', this.rows);
     this.rows.push(this.createItemFormGroup());
+
+
   }
 
   onRemoveRow(rowIndex: number, productId?: number) {
@@ -397,9 +411,11 @@ export class OrderUpdateComponent implements OnInit {
       (obj) => !uniq[obj.id] && (uniq[obj.id] = true)
     );
 
-    for (let i = 0; i < this.filterStock.length; i++) {
-      console.log(this.filterStock[i]);
-    }
+    // for (let i = 0; i < this.filterStock.length; i++) {
+    //   console.log(this.filterStock[i]);
+    // }
+
+
   }
 
   createItemFormGroup(): FormGroup {
