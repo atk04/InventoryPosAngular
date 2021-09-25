@@ -62,14 +62,21 @@
             </div>
             <div class="form-group">
               <label for="purchasePrice">Purchase Price</label>
-              <input
+              <div class="input-group">
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="fa fa-dollar-sign"></i>
+                  </span>
+                </div>
+                <input
                 formControlName="purchasePrice"
                 type="text"
                 class="form-control"
                 id="purchasePrice"
                 placeholder="Enter Purchase Price"
                 value="{{Product.purchasePrice}}"
-              />
+                />
+              </div>
             </div>
             <div
               *ngIf="
@@ -87,14 +94,21 @@
             </div>
             <div class="form-group">
               <label for="salePrice">Sale Price</label>
-              <input
+              <div class="input-group">
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="fa fa-dollar-sign"></i>
+                  </span>
+                </div>
+                <input
                 formControlName="salePrice"
                 type="text"
                 class="form-control"
                 id="salePrice"
                 placeholder="Enter Sale Price"
                 value="{{Product.salePrice}}"
-              />
+                />
+              </div>
             </div>
             <div
               *ngIf="
