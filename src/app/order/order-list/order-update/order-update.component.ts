@@ -141,7 +141,6 @@ export class OrderUpdateComponent implements OnInit {
     private invoiceDetailApiCallService: InvoiceDetailApiCallService,
     private invoiceService: InvoiceService,
     private router: Router,
-    private activatedRoute:ActivatedRoute
   ) {
     this.addForm = this.formBuilder.group({
       items: [null, Validators.required],
