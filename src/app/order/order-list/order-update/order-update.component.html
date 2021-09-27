@@ -3,7 +3,44 @@
     <app-card cardTitle="Update Order">
       <form #orderForm="ngForm" (ngSubmit)="onUpdate(orderForm)">
         <div class="row">
-          <div class="col-md-6 m-b-30 m-t-20">
+
+
+          <div class="col-md-4 m-b-30 m-t-20">
+            <label for="exampleFormControlSelect1">Company Name</label>
+            <div class="input-group">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa fa-home"></i>
+                </span>
+              </div>
+              <select
+
+
+             name="CompanyId"
+             ngModel
+             #CompanyId="ngModel"
+              class="form-control"
+              id="exampleFormControlSelect1"
+              required
+            >
+            <option selected disabled>Select Company</option>
+              <option selected
+                *ngFor="let tempCompany of companies"
+                [value]="tempCompany.id"
+              >
+                {{ tempCompany.name }}
+
+              </option>
+            </select>
+            </div>
+
+            <ng-container *ngIf="orderForm.submitted && CompanyId.invalid">
+              <br />
+              <div class="alert alert-danger">Company Name is required</div>
+            </ng-container>
+          </div>
+
+          <div class="col-md-4 m-b-30 m-t-20">
             <label for="customerName">Customer Name</label>
             <div class="input-group">
               <div class="input-group-append">
@@ -27,7 +64,7 @@
               <div class="alert alert-danger">Customer Name is required</div>
             </ng-container>
           </div>
-          <div class="col-md-6 m-b-30 m-t-20">
+          <div class="col-md-4 m-b-30 m-t-20">
             <label for="customerName">Date</label>
             <div class="form-group">
               <div class="input-group">
@@ -54,7 +91,6 @@
             </div>
           </div>
         </div>
-
         <div class="row">
           <table class="table table-bordered">
             <thead>

@@ -25,6 +25,9 @@ import { InvoiceDetail } from 'src/app/common/invoice-detail';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { InvoiceService } from 'src/app/services/invoice.service';
 import { Router } from '@angular/router';
+import { Companies } from 'src/app/common/companies';
+import { CompanyService } from 'src/app/services/company.service';
+import { Order } from 'src/app/common/order';
 
 @Component({
   selector: 'app-create-order-home',
@@ -59,6 +62,9 @@ export class CreateOrderHomeComponent implements OnInit {
 
   ProductListItem: ProductList[] = [];
 
+  //Company
+  CompanyId:number;
+
   //Subtotal
   Subtotal: number = 0;
 
@@ -89,6 +95,12 @@ export class CreateOrderHomeComponent implements OnInit {
   //create Invoice
   invoice: Invoice = new Invoice();
 
+  // //create Company
+  // selectedCompany:Companies=new Companies();
+
+  //create Order
+  order:Order=new Order();
+
   //saved invoice
   //invoiceItem: InvoiceItem=new InvoiceItem();
   invoiceId: number = 0;
@@ -115,6 +127,11 @@ export class CreateOrderHomeComponent implements OnInit {
   //disable text box
   disabledText=true;
 
+  //for display company list on order add form
+  companies:Companies[]=[];
+
+  // //for add Company from order form
+  // company:Companies=new Companies();
   constructor(
     private formBuilder: FormBuilder,
     private productService: ProductService,
@@ -124,6 +141,7 @@ export class CreateOrderHomeComponent implements OnInit {
     private invoiceDetailApiCallService: InvoiceDetailApiCallService,
     private invoiceService:InvoiceService,
     private router: Router,
+    private companyService:CompanyService
   ) {
     this.addForm = this.formBuilder.group({
       items: [null, Validators.required],
@@ -141,11 +159,12 @@ export class CreateOrderHomeComponent implements OnInit {
     this.getProduct();
 
     this.productOrderForm = this.formBuilder.group({
-      discount: new FormControl('', [Validators.pattern(this.discountRegex)]),
-      paid: new FormControl('', [
-        Validators.required,
-        Validators.pattern(this.numberOrdecimalRegEx),
-      ]),
+      // discount: new FormControl('', [Validators.pattern(this.discountRegex)]),
+      // paid: new FormControl('', [
+      //   Validators.required,
+      //   Validators.pattern(this.numberOrdecimalRegEx),
+      // ]),
+      //CompanyId: new FormControl('', [Validators.required]),
     });
     const today = new Date();
     this.orderDate = new NgbDate(
@@ -153,7 +172,30 @@ export class CreateOrderHomeComponent implements OnInit {
       today.getMonth() + 1,
       today.getDate()
     );
+
+    this.listCompanies();
   }
+
+
+
+  listCompanies(){
+    this.companyService.getCompanies().subscribe((data)=>{
+      this.companies=data;
+    })
+  }
+
+  // onChangeCompanyId(companyId: number) {
+  //   this.companyService
+  //     .getCompanyById(companyId)
+  //     .subscribe((data) => {
+  //       this.company.id=+data['id'];
+  //       this.company.name=data['name'];
+  //       this.company.address=data['address'];
+  //       this.company.phoneNumber=data['phoneNumber'];
+  //       this.company.emailAddress=data['emailAddress'];
+  //       this.company.websiteAddress=data['websiteAddress'];
+  //     });
+  // }
   getProduct() {
     this.productService.getProducts().subscribe((data) => {
       this.ProductList = data;
@@ -402,6 +444,8 @@ export class CreateOrderHomeComponent implements OnInit {
 
   onSubmit(orderForm: NgForm) {
 
+
+
     if(orderForm.control.invalid){
       orderForm.form.markAllAsTouched();
       return;
@@ -447,6 +491,10 @@ export class CreateOrderHomeComponent implements OnInit {
     return;
     }
 
+    this.CompanyId=+orderForm.value.CompanyId;
+    //console.log(this.CompanyId);
+
+
     for (let i = 0; i < this.rows.length; i++) {
       this.productService
         .getProductById(this.rows.value[i].id)
@@ -477,7 +525,35 @@ export class CreateOrderHomeComponent implements OnInit {
     this.invoice.due = this.Due;
     this.invoice.paymentType = orderForm.value.payment;
     //console.log('Insert order Date =' + this.invoice.orderDate);
-    this.invoiceApiCallService.saveInvoice(this.invoice).subscribe((data) => {
+
+
+    //get Company data
+//     this.companyService.getCompanyById(this.CompanyId).subscribe((data)=>{
+// this.selectedCompany.id=+data['id'];
+//         // this.selectedCompany.name=data['name'];
+//         // this.selectedCompany.address=data['address'];
+//         // this.selectedCompany.phoneNumber=data['phoneNumber'];
+//         // this.selectedCompany.emailAddress=data['emailAddress'];
+//         // this.selectedCompany.websiteAddress=data['websiteAddress'];
+
+//     })
+//     console.log(this.selectedCompany)
+
+
+
+
+    this.order.customerName=this.invoice.customerName;
+    this.order.orderDate=this.invoice.orderDate;
+    this.order.subTotal=this.invoice.subTotal;
+    this.order.tax=this.invoice.tax;
+    this.order.discount=this.invoice.discount;
+    this.order.total=this.invoice.total;
+    this.order.paid=this.invoice.paid;
+    this.order.due=this.invoice.due;
+    this.order.paymentType=this.invoice.paymentType;
+    this.order.companyId=this.CompanyId;
+
+    this.invoiceApiCallService.saveInvoice(this.order).subscribe((data) => {
       this.invoiceId = +data.id;
 
       for (let i = 0; i < this.rows.length; i++) {
@@ -508,6 +584,7 @@ export class CreateOrderHomeComponent implements OnInit {
 
 
       this.invoiceService.getInvoiceByInvoiceId(this.invoiceId).subscribe((data)=>{
+
         let savedInvoiceId=+data.id;
         if(this.invoiceId==savedInvoiceId){
           this.title = 'Create Order';

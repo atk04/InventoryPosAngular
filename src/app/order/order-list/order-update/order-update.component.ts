@@ -28,6 +28,9 @@ import { InvoiceService } from 'src/app/services/invoice.service';
 import { ProductApicallService } from 'src/app/services/product-apicall.service';
 import { ProductService } from 'src/app/services/product.service';
 import { OrderList } from 'src/app/common/order-list';
+import { UpdateOrder } from 'src/app/common/update-order';
+import { Companies } from 'src/app/common/companies';
+import { CompanyService } from 'src/app/services/company.service';
 
 @Component({
   selector: 'app-order-update',
@@ -92,8 +95,11 @@ export class OrderUpdateComponent implements OnInit {
   //for orderProduct
   orderProduct: OrderProduct = new OrderProduct();
 
-  //create Invoice
-  invoice: Invoice = new Invoice();
+  // //create Invoice
+  // invoice: Invoice = new Invoice();
+
+  //update Invoice
+  updateInvoice: UpdateOrder = new UpdateOrder();
 
   //saved invoice
   //invoiceItem: InvoiceItem=new InvoiceItem();
@@ -131,6 +137,12 @@ export class OrderUpdateComponent implements OnInit {
 
   filterStock: OrderProduct[] = [];
 
+  //Company
+  CompanyId: number;
+
+  //for display company list on order add form
+  companies: Companies[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -141,6 +153,7 @@ export class OrderUpdateComponent implements OnInit {
     private invoiceDetailApiCallService: InvoiceDetailApiCallService,
     private invoiceService: InvoiceService,
     private router: Router,
+    private companyService: CompanyService
   ) {
     this.addForm = this.formBuilder.group({
       items: [null, Validators.required],
@@ -151,7 +164,6 @@ export class OrderUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe((params) => {
       this.invoiceId = +params['id'];
-      //console.log(this.invoiceId)
 
       this.invoiceDetailApiCallService
         .getInvoiceDetailById(this.invoiceId)
@@ -159,7 +171,6 @@ export class OrderUpdateComponent implements OnInit {
           this.orderList = data;
 
           for (let i = 0; i < this.orderList.length; i++) {
-            // console.log(this.orderList[i]);
             this.customerName = this.orderList[i].invoice.customerName;
             this.Subtotal = this.orderList[i].invoice.subTotal;
             this.Tax = this.orderList[i].invoice.tax;
@@ -183,7 +194,6 @@ export class OrderUpdateComponent implements OnInit {
               this.rows.value[i].quantity * this.rows.value[i].salePrice;
           }
         });
-
     });
 
     this.addForm.get('items').valueChanges.subscribe((val) => {
@@ -207,7 +217,16 @@ export class OrderUpdateComponent implements OnInit {
       today.getMonth() + 1,
       today.getDate()
     );
+
+    this.listCompanies();
   }
+
+  listCompanies() {
+    this.companyService.getCompanies().subscribe((data) => {
+      this.companies = data;
+    });
+  }
+
   getProduct() {
     this.productService.getProducts().subscribe((data) => {
       this.ProductList = data;
@@ -285,11 +304,11 @@ export class OrderUpdateComponent implements OnInit {
       this.disabledText = false;
     }
 
-     //for reenter paid amount
-     this.Paid=0;
+    //for reenter paid amount
+    this.Paid = 0;
 
-     //for Due
-    this.Due=this.OrderTotal;
+    //for Due
+    this.Due = this.OrderTotal;
   }
 
   onClickQuantity(index: number, quantity: number) {
@@ -344,10 +363,10 @@ export class OrderUpdateComponent implements OnInit {
     }
 
     //for reenter paid amount
-    this.Paid=0;
+    this.Paid = 0;
 
     //for Due
-    this.Due=this.OrderTotal;
+    this.Due = this.OrderTotal;
   }
 
   onAddRow() {
@@ -366,8 +385,6 @@ export class OrderUpdateComponent implements OnInit {
     this.ProductListId = 0;
     this.addForm.addControl('rows', this.rows);
     this.rows.push(this.createItemFormGroup());
-
-
   }
 
   onRemoveRow(rowIndex: number, productId?: number) {
@@ -410,12 +427,6 @@ export class OrderUpdateComponent implements OnInit {
     this.filterStock = this.removeStock.filter(
       (obj) => !uniq[obj.id] && (uniq[obj.id] = true)
     );
-
-    // for (let i = 0; i < this.filterStock.length; i++) {
-    //   console.log(this.filterStock[i]);
-    // }
-
-
   }
 
   createItemFormGroup(): FormGroup {
@@ -508,11 +519,11 @@ export class OrderUpdateComponent implements OnInit {
       return;
     }
     for (let i = 0; i < this.rows.length; i++) {
-      if(this.rows.value[i].id==null){
+      if (this.rows.value[i].id == null) {
         this.title = 'Create Order';
-      this.body = 'Please select Product';
-      this.onWarning();
-      return;
+        this.body = 'Please select Product';
+        this.onWarning();
+        return;
       }
     }
 
@@ -573,12 +584,6 @@ export class OrderUpdateComponent implements OnInit {
         this.rows.value[i].stock - this.rows.value[i].quantity;
     }
 
-    this.invoiceDetailApiCallService
-      .deleteInvoiceById(this.invoiceId)
-      .subscribe();
-
-
-
     //Update stock amount to product table
     for (let i = 0; i < this.rows.length; i++) {
       this.orderProduct.id = this.rows.value[i].id;
@@ -589,7 +594,6 @@ export class OrderUpdateComponent implements OnInit {
 
       this.orderProduct = new OrderProduct();
     }
-
 
     //Update stock for deleted save product stock
     for (let i = 0; i < this.filterStock.length; i++) {
@@ -602,74 +606,72 @@ export class OrderUpdateComponent implements OnInit {
       this.orderProduct = new OrderProduct();
     }
 
+    //Insert data to invoice and invoice detail table
 
+    this.updateInvoice.id = this.invoiceId;
+    this.updateInvoice.customerName = orderForm.value.customerName;
 
-
-
-      //Insert data to invoice and invoice detail table
-
-    this.invoice.customerName = orderForm.value.customerName;
-
-    this.invoice.orderDate = new Date(
+    this.updateInvoice.orderDate = new Date(
       orderForm.value.orderDate.year,
       orderForm.value.orderDate.month - 1,
       orderForm.value.orderDate.day
     );
-    this.invoice.subTotal = this.Subtotal;
-    this.invoice.tax = this.Tax;
-    this.invoice.discount = orderForm.value.Percent;
-    this.invoice.total = this.OrderTotal;
-    this.invoice.paid = orderForm.value.Paid;
-    this.invoice.due = this.Due;
-    this.invoice.paymentType = orderForm.value.payment;
-    //console.log('Insert order Date =' + this.invoice.orderDate);
-    this.invoiceApiCallService.saveInvoice(this.invoice).subscribe((data) => {
-      this.invoiceId = +data.id;
+    this.updateInvoice.subTotal = this.Subtotal;
+    this.updateInvoice.tax = this.Tax;
+    this.updateInvoice.discount = orderForm.value.Percent;
+    this.updateInvoice.total = this.OrderTotal;
+    this.updateInvoice.paid = orderForm.value.Paid;
+    this.updateInvoice.due = this.Due;
+    this.updateInvoice.paymentType = orderForm.value.payment;
+    this.updateInvoice.companyId = +orderForm.value.CompanyId;
 
-      for (let i = 0; i < this.rows.length; i++) {
-        this.productService
-          .getProductById(this.rows.value[i].id)
+    this.invoiceApiCallService
+      .updateInvoice(this.updateInvoice)
+      .subscribe((data) => {
+        this.invoiceId = +data.id;
+        this.invoiceDetailApiCallService
+          .deleteInvoiceDetailByInvoiceId(this.invoiceId)
+          .subscribe();
+
+        for (let i = 0; i < this.rows.length; i++) {
+          this.productService
+            .getProductById(this.rows.value[i].id)
+            .subscribe((data) => {
+              this.productId = +data.id;
+              console.log('Product Id = ' + this.productId);
+              this.invoiceDetailItem.productName = data.name;
+              this.invoiceDetailItem.productPrice = data.salePrice;
+              this.invoiceDetailItem.productQuantity =
+                this.rows.value[i].quantity;
+              this.invoiceDetailItem.orderDate = this.updateInvoice.orderDate;
+
+              this.invoiceDetail.invoiceDetailItem = this.invoiceDetailItem;
+              this.invoiceDetail.invoiceId = this.invoiceId;
+              this.invoiceDetail.productId = this.productId;
+
+              this.invoiceDetailApiCallService
+                .createInvoiceDetail(this.invoiceDetail)
+                .subscribe();
+            });
+        }
+
+        //check update success or not
+        this.invoiceService
+          .getInvoiceByInvoiceId(this.invoiceId)
           .subscribe((data) => {
-            this.productId = +data.id;
-
-            this.invoiceDetailItem.productName = data.name;
-            this.invoiceDetailItem.productPrice = data.salePrice;
-            this.invoiceDetailItem.productQuantity =
-              this.rows.value[i].quantity;
-            this.invoiceDetailItem.orderDate = this.invoice.orderDate;
-
-            this.invoiceDetail.invoiceDetailItem = this.invoiceDetailItem;
-            this.invoiceDetail.invoiceId = this.invoiceId;
-            this.invoiceDetail.productId = this.productId;
-
-            this.invoiceDetailApiCallService
-              .createInvoiceDetail(this.invoiceDetail)
-              .subscribe();
+            let savedInvoiceId = +data.id;
+            if (this.invoiceId == savedInvoiceId) {
+              this.title = 'Update Order';
+              this.body = 'Name: ' + data.customerName;
+              this.onSuccess();
+            }
+            setTimeout(() => {
+              this.router.navigate(['/', 'order-list-page']);
+            }, 2500);
           });
-      }
+      });
 
-      //check update success or not
-      this.invoiceService
-        .getInvoiceByInvoiceId(this.invoiceId)
-        .subscribe((data) => {
-          let savedInvoiceId = +data.id;
-          if (this.invoiceId == savedInvoiceId) {
-            this.title = 'Update Order';
-            this.body = 'Name: ' + data.customerName;
-            this.onSuccess();
-          }
-          setTimeout(() => {
-          this.router.navigate(['/', 'order-list-page']);
-          },2500);
-        });
-    });
-
-
-
-
-
-   // this.router.navigate(['order-list-page'],{relativeTo:this.activatedRoute});
-
+    //this.router.navigate(['order-list-page'],{relativeTo:this.activatedRoute});
   }
 }
 
