@@ -41,6 +41,14 @@ const NavigationItems = [
         icon: 'feather icon-sidebar',
       },
       {
+        id: 'company-page',
+        title: 'Company',
+        type: 'item',
+        url: '/company-page',
+        classes: 'nav-item',
+        icon: 'feather icon-home',
+      },
+      {
         id: 'category-page',
         title: 'Category',
         type: 'item',

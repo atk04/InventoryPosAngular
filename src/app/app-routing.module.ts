@@ -18,6 +18,9 @@ const routes: Routes = [
         loadChildren: () => import('./demo/pages/sample-page/sample-page.module').then(module => module.SamplePageModule)
       },
       {
+        path:'company-page',loadChildren:()=>import('./company/company.module').then(module=>module.CompanyModule)
+      },
+      {
         path:'category-page',loadChildren:()=>import('./category/category.module').then(module=>module.CategoryModule)
       },
       {
