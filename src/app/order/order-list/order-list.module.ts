@@ -13,6 +13,7 @@ import {NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PrintOrderComponent } from './print-order/print-order.component';
+import {NgxPrintModule} from 'ngx-print';
 
 const materialModules = [
   MatButtonModule,
@@ -31,7 +32,8 @@ const materialModules = [
     materialModules,
     NgbDatepickerModule,
     SnotifyModule,
-    NgSelectModule
+    NgSelectModule,
+    NgxPrintModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   providers: [{ provide: 'SnotifyToastConfig', useValue: ToastDefaults }, SnotifyService]

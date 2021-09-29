@@ -1,10 +1,123 @@
 <div class="row">
   <div class="col-sm-12">
     <app-card cardTitle="Invoice View">
-      {{orderList|json}}
+      <div id="print-invoice" class="row">
+        <div class="center">
+          <h2>{{ selectCompany.name }}</h2>
 
-      {{selectCompany|json}}
-      </app-card>
+          <h5>{{ selectCompany.address }}</h5>
+          <h5>PHONE NUMBER : {{ selectCompany.phoneNumber }}</h5>
+          <h5>EMAIL ADDRESS : {{ selectCompany.emailAddress }}</h5>
+          <h5>WEBSITE : {{ selectCompany.websiteAddress }}</h5>
+        </div>
+
+        <hr />
+        <div class="col-md-12">
+          <h6 style="width: 100%">
+            <span style="font-style: italic">Bill To : </span>{{ customerName }}
+          </h6>
+
+          <h6 style="width: 100%">
+            <span style="font-style: italic">Invoice No : </span>{{ invoiceNo }}
+          </h6>
+
+          <h6 style="width: 100%">
+            <span style="font-style: italic">Order Date : </span>{{ orderDate }}
+          </h6>
+        </div>
+
+        <div class="row col-md-12">
+          <table class="table table-bordered">
+            <thead class="thead-light">
+              <tr>
+                <th>PRODUCT</th>
+                <th>PRICE</th>
+                <th>QTY</th>
+                <th>TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of productList">
+                <td>
+                  {{ product.productName }}
+                </td>
+                <td>
+                  {{ product.productPrice }}
+                </td>
+                <td>
+                  {{ product.productQuantity }}
+                </td>
+                <td>
+                  {{ product.total }}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold">
+                  SUBTOTAL
+                </td>
+                <td>{{ invoiceItem.subTotal }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold">
+                  TAX (5%)
+                </td>
+                <td>{{ invoiceItem.tax }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold">
+                  DISCOUNT
+                </td>
+                <td>{{ invoiceItem.discount }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold">
+                  GRAND TOTAL
+                </td>
+                <td>{{ invoiceItem.total }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold">
+                  PAID
+                </td>
+                <td>{{ invoiceItem.paid }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold">
+                  DUE
+                </td>
+                <td>{{ invoiceItem.due }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold">
+                  PAYMENT TYPE
+                </td>
+                <td>{{ invoiceItem.paymentType }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <h6 style="width: 100%; margin-left: 0">Important Notice :</h6>
+          <p style="width: 100%">
+            No item will be replaced or refunded if you dnon't have the invoice
+            with you.
+          </p>
+          <p style="width: 100%">You can refund within 2 days of purchase.</p>
+        </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          <button
+            [useExistingCss]="true"
+            printSectionId="print-invoice"
+            ngxPrint
+            type="button"
+            mat-raised-button
+            color="primary"
+            class="float-right"
+          >
+            Print Invoice
+          </button>
+        </div>
+      </div>
+    </app-card>
+  </div>
 </div>
-

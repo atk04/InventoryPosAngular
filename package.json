@@ -71,6 +71,7 @@
     "ngx-lightbox": "^2.1.2",
     "ngx-owl-carousel-o": "^3.0.1",
     "ngx-perfect-scrollbar": "^8.0.0",
+    "ngx-print": "^1.2.1",
     "nouislider": "^14.6.0",
     "peity": "^3.3.0",
     "rxjs": "^6.6.3",
