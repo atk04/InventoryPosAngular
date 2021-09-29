@@ -26,9 +26,17 @@
                 <td>{{ order.due | currency: "USD" }}</td>
                 <td>{{ order.paymentType }}</td>
                 <td>
-                  <button type="button" mat-raised-button id="eye">
+
+                  <a
+                    routerLink="/order-list-page/print/{{ order.id }}"
+                    mat-raised-button
+                    id="eye"
+                  >
+                    <i class="fa fa-eye"></i>
+                  </a>
+                  <!-- <button type="button" mat-raised-button id="eye">
                     <i class="fa fa-print"></i>
-                  </button>
+                  </button> -->
                 </td>
                 <td>
                   <a

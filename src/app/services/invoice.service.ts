@@ -7,10 +7,16 @@ import { Observable } from 'rxjs';
 })
 export class InvoiceService {
 private invoiceUrl='http://localhost:8080/api/invoice';
+
   constructor(private httpClient: HttpClient) { }
 
   getInvoiceByInvoiceId(InvoiceId:number):Observable<any>{
     const searchUrl=`${this.invoiceUrl}/${InvoiceId}`;
+    return this.httpClient.get(searchUrl);
+  }
+
+  getCompanyByInvoiceId(InvoiceId:number):Observable<any>{
+    const searchUrl=`${this.invoiceUrl}/${InvoiceId}/company`;
     return this.httpClient.get(searchUrl);
   }
 }

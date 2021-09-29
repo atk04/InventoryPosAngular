@@ -12,6 +12,7 @@ import { OrderUpdateComponent } from './order-update/order-update.component';
 import {NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { PrintOrderComponent } from './print-order/print-order.component';
 
 const materialModules = [
   MatButtonModule,
@@ -22,7 +23,7 @@ const materialModules = [
 ];
 
 @NgModule({
-  declarations: [OrderListHomeComponent, OrderUpdateComponent],
+  declarations: [OrderListHomeComponent, OrderUpdateComponent, PrintOrderComponent],
   imports: [
     CommonModule,
     OrderListRoutingModule,
