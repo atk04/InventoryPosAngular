@@ -27,6 +27,8 @@ import { NgbButtonsModule, NgbDropdownModule, NgbTabsetModule, NgbTooltipModule 
 /*Http Client and Form Module */
 import {HttpClientModule} from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+import { NgwWowModule } from 'ngx-wow';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,6 +45,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     NavRightComponent,
     ConfigurationComponent,
     ToggleFullScreenDirective,
+    LandingPageComponent,
 
   ],
   imports: [
@@ -56,6 +59,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     NgbTabsetModule,
     HttpClientModule,
     ReactiveFormsModule,
+    NgwWowModule
   ],
   providers: [NavigationItem],
   bootstrap: [AppComponent]

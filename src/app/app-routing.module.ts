@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import {AuthComponent} from './theme/layout/auth/auth.component';
 
 const routes: Routes = [
+
   {
-    path: '',
+    path: 'admin',
     component: AdminComponent,
     children: [
       {
@@ -38,10 +40,14 @@ const routes: Routes = [
     ]
   },
   {
-    path: '',
-    component: AuthComponent,
-    children: []
-  }
+path:'',
+component:LandingPageComponent
+  },
+  // {
+  //   path: '',
+  //   component: AuthComponent,
+  //   children: []
+  // }
 ];
 
 @NgModule({

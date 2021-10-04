@@ -57,7 +57,12 @@
               "node_modules/datatables.net-buttons/js/buttons.print.js",
               "node_modules/datatables.net-colreorder/js/dataTables.colReorder.js",
               "node_modules/datatables.net-responsive/js/dataTables.responsive.js",
-              "node_modules/datatables.net-select/js/dataTables.select.js"
+              "node_modules/datatables.net-select/js/dataTables.select.js",
+              "src/assets/js/jquery.min.js",
+              "src/assets/js/popper.min.js",
+              "src/assets/js/bootstrap.min.js",
+              "node_modules/wowjs/dist/wow.js",
+              "src/assets/js/mdb.min.js"
             ],
             "vendorChunk": true,
             "extractLicenses": false,
