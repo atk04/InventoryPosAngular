@@ -17,47 +17,58 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let order of orderList">
-                <td>{{ order.id }}</td>
-                <td>{{ order.customerName }}</td>
-                <td>{{ order.orderDate }}</td>
-                <td>{{ order.total | currency: "USD" }}</td>
-                <td>{{ order.paid | currency: "USD" }}</td>
-                <td>{{ order.due | currency: "USD" }}</td>
-                <td>{{ order.paymentType }}</td>
-                <td>
-                  <a
-                    routerLink="/order-list-page/print/{{ order.id }}"
-                    mat-raised-button
-                    id="eye"
-                  >
-                    <i class="fa fa-eye"></i>
-                  </a>
-                  <!-- <button type="button" mat-raised-button id="eye">
-                    <i class="fa fa-print"></i>
-                  </button> -->
-                </td>
-                <td>
-                  <a
-                    routerLink="/order-list-page/{{ order.id }}"
-                    mat-raised-button
-                    color="primary"
-                  >
-                    <i class="fa fa-edit"></i>
-                  </a>
-                </td>
+              <ng-container *ngIf="orderList.length!=0;else second">
+                <tr *ngFor="let order of orderList">
+                  <td>{{ order.id }}</td>
+                  <td>{{ order.customerName }}</td>
+                  <td>{{ order.orderDate }}</td>
+                  <td>{{ order.total | currency: "USD" }}</td>
+                  <td>{{ order.paid | currency: "USD" }}</td>
+                  <td>{{ order.due | currency: "USD" }}</td>
+                  <td>{{ order.paymentType }}</td>
+                  <td>
+                    <a
+                      routerLink="/order-list-page/print/{{ order.id }}"
+                      mat-raised-button
+                      id="eye"
+                    >
+                      <i class="fa fa-eye"></i>
+                    </a>
+                    <!-- <button type="button" mat-raised-button id="eye">
+                      <i class="fa fa-print"></i>
+                    </button> -->
+                  </td>
+                  <td>
+                    <a
+                      routerLink="/order-list-page/{{ order.id }}"
+                      mat-raised-button
+                      color="primary"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </a>
+                  </td>
 
-                <td>
-                  <button
-                    type="button"
-                    mat-raised-button
-                    color="warn"
-                    (click)="onDelete(order.id)"
-                  >
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
+                  <td>
+                    <button
+                      type="button"
+                      mat-raised-button
+                      color="warn"
+                      (click)="onDelete(order.id)"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-template #second>
+                <tr>
+                  <td colspan="8" style="text-align: center">
+                    There is no order list.
+                  </td>
+                </tr>
+              </ng-template>
+
+
             </tbody>
           </table>
           <ng-container *ngIf="orderList.length != 0">
