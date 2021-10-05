@@ -136,7 +136,7 @@ onDelete(invoiceId:number){
       .subscribe({
         next:response=>{
           this.title = 'Delete Success';
-          this.body = 'Category: ' + `${response.message}`;
+          this.body = 'Customer Name: ' + `${response.message}`;
           this.onSuccess();
           this.OrderListByIdDescAfterDelete();
         },

@@ -226,7 +226,7 @@ export class CompanyHomeComponent implements OnInit {
     this.companyApiCallService.deleteCompanyById(id).subscribe({
       next: (response) => {
         this.title = 'Delete Success';
-        this.body = 'Category: ' + `${response.message}`;
+        this.body = 'Company : ' + `${response.message}`;
         this.onSuccess();
         this.listCompanies();
       }
