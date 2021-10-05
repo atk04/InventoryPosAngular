@@ -16,7 +16,15 @@
           <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav ml-auto">
 
-            </ul><a class="btn btn-primary btn-rounded my-0" routerLink="/home-page/login">Login</a>
+            </ul>
+            <div *ngIf="!getUserName">
+            <a class="btn btn-outline-white btn-rounded my-0" (click)="login()">Login</a>
+          </div>
+          <div *ngIf="getUserName">
+
+            <a class="btn btn-outline-white btn-rounded my-0" (click)="logout()">Logout</a>
+          </div>
+
           </div>
         </div>
       </nav>
@@ -29,11 +37,24 @@
                 <div class="white-text">
                   <div class="wow fadeInLeft" data-wow-delay="0.3s">
                     <h1 class="h1-responsive font-weight-bold mt-sm-5" style="color: white;">POS System</h1>
+                    <div *ngIf="!getUserName">
                     <div class="h6">
+
                       Your small business needs more than a cash register to ring up sales and accept payments.
                     </div>
                   </div><br>
-                  <div class="wow fadeInLeft" data-wow-delay="0.3s"><a class="btn btn-white dark-grey-text font-weight-bold ml-0" href="https://www.youtube.com/watch?v=60ItHLz5WEA" target="_blank"><i class="fa fa-play mr-1"></i> View Demo</a><a class="btn btn-outline-white" href="#">Learn more</a></div>
+                  </div>
+
+
+                  <div *ngIf="getUserName">
+                    <div class="wow fadeInLeft" data-wow-delay="0.3s">
+                    <div class="h4">
+                      Hello {{getUserName}}
+                    </div>
+
+                    <div class="wow fadeInLeft" data-wow-delay="0.3s"><a class="btn btn-outline-white" routerLink="/admin">View Home Page</a></div>
+                  </div>
+                  </div>
                 </div>
               </div>
             </div>

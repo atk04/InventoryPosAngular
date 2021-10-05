@@ -36,6 +36,7 @@
     "angular-datatables": "^9.0.2",
     "angular-dual-listbox": "^5.0.1",
     "angular-highcharts-chart": "^1.0.2",
+    "angular-oauth2-oidc": "^12.1.0",
     "angular-pell": "^0.1.0",
     "angular2-chartjs": "^0.5.1",
     "angular2-text-mask": "^9.0.0",

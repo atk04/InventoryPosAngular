@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { AuthGuardService } from './services/auth-guard.service';
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import {AuthComponent} from './theme/layout/auth/auth.component';
 
@@ -9,6 +10,7 @@ const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
+
     children: [
       {
         path: '',
@@ -17,6 +19,7 @@ const routes: Routes = [
       },
       {
         path: 'sample-page',
+        canActivate:[AuthGuardService],
         loadChildren: () => import('./demo/pages/sample-page/sample-page.module').then(module => module.SamplePageModule)
       },
       {
