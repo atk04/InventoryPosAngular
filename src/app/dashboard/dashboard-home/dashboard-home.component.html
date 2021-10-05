@@ -1,8 +1,110 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="Dashboard">
-      <p class="p-t-20">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
-      <button (click)="logout()">Logout</button>
-    </app-card>
+    <!-- page statistic card start -->
+    <div class="col-sm-3">
+      <app-card
+        [hidHeader]="true"
+        [isCardFooter]="true"
+        footerClass="bg-c-yellow"
+      >
+        <div class="row align-items-center">
+          <div class="col-8">
+            <h4 class="text-c-yellow">$30200</h4>
+            <h6 class="text-muted m-b-0">Today Invoices</h6>
+          </div>
+          <div class="col-4 text-right">
+            <i class="feather icon-file-text f-28"></i>
+          </div>
+        </div>
+        <div class="app-card-footer">
+          <div class="row align-items-center">
+            <div class="col-9">
+              <p class="text-white m-b-0">% change</p>
+            </div>
+            <div class="col-3 text-right">
+              <i class="feather icon-trending-up text-white f-16"></i>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-sm-3">
+      <app-card
+        [hidHeader]="true"
+        [isCardFooter]="true"
+        footerClass="bg-c-green"
+      >
+        <div class="row align-items-center">
+          <div class="col-9">
+            <h4 class="text-c-green">290+</h4>
+            <h6 class="text-muted m-b-0">This Month Invoices</h6>
+          </div>
+          <div class="col-3 text-right">
+            <i class="feather icon-book f-28"></i>
+          </div>
+        </div>
+        <div class="app-card-footer">
+          <div class="row align-items-center">
+            <div class="col-9">
+              <p class="text-white m-b-0">% change</p>
+            </div>
+            <div class="col-3 text-right">
+              <i class="feather icon-trending-up text-white f-16"></i>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-sm-3">
+      <app-card [hidHeader]="true" [isCardFooter]="true" footerClass="bg-c-yellow">
+        <div class="row align-items-center">
+          <div class="col-8">
+            <h4 class="text-c-yellow">145</h4>
+            <h6 class="text-muted m-b-0">Today Sales</h6>
+          </div>
+          <div class="col-4 text-right">
+            <i class="feather icon-shopping-cart f-28"></i>
+          </div>
+        </div>
+        <div class="app-card-footer">
+          <div class="row align-items-center">
+            <div class="col-9">
+              <p class="text-white m-b-0">% change</p>
+            </div>
+            <div class="col-3 text-right">
+              <i class="feather icon-trending-up text-white f-16"></i>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-sm-3">
+      <app-card
+        [hidHeader]="true"
+        [isCardFooter]="true"
+        footerClass="bg-c-green"
+      >
+        <div class="row align-items-center">
+          <div class="col-8">
+            <h4 class="text-c-green">500</h4>
+            <h6 class="text-muted m-b-0">This Month Sales</h6>
+          </div>
+          <div class="col-4 text-right">
+            <i class="feather icon-shopping-cart f-28"></i>
+          </div>
+        </div>
+        <div class="app-card-footer">
+          <div class="row align-items-center">
+            <div class="col-9">
+              <p class="text-white m-b-0">% change</p>
+            </div>
+            <div class="col-3 text-right">
+              <i class="feather icon-trending-up text-white f-16"></i>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <!-- page statistic card end -->
   </div>
 </div>
