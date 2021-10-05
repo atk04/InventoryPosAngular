@@ -33,12 +33,12 @@ const NavigationItems = [
     icon: 'feather icon-align-left',
     children: [
       {
-        id: 'sample-page',
-        title: 'Sample Page',
+        id: 'dashboard-page',
+        title: 'Dashboard',
         type: 'item',
-        url: '/admin/sample-page',
+        url: '/admin/dashboard-page',
         classes: 'nav-item',
-        icon: 'feather icon-sidebar',
+        icon: 'feather icon-clipboard',
       },
       {
         id: 'company-page',

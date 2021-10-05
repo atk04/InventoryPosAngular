@@ -14,13 +14,13 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'sample-page',
+        redirectTo: 'dashboard-page',
         pathMatch: 'full'
       },
       {
-        path: 'sample-page',
+        path: 'dashboard-page',
         canActivate:[AuthGuardService],
-        loadChildren: () => import('./demo/pages/sample-page/sample-page.module').then(module => module.SamplePageModule)
+        loadChildren: () => import('./dashboard/dashboard.module').then(module=>module.DashboardModule)
       },
       {
         path:'company-page',canActivate:[AuthGuardService],loadChildren:()=>import('./company/company.module').then(module=>module.CompanyModule)
