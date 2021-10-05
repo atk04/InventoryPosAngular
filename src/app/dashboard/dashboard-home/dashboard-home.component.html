@@ -9,7 +9,7 @@
       >
         <div class="row align-items-center">
           <div class="col-8">
-            <h4 class="text-c-yellow">$30200</h4>
+            <h4 class="text-c-yellow">{{todayInvoiceCount}}</h4>
             <h6 class="text-muted m-b-0">Today Invoices</h6>
           </div>
           <div class="col-4 text-right">
@@ -36,7 +36,7 @@
       >
         <div class="row align-items-center">
           <div class="col-9">
-            <h4 class="text-c-green">290+</h4>
+            <h4 class="text-c-green">{{curentdayOfMonthInvoiceCount}}</h4>
             <h6 class="text-muted m-b-0">This Month Invoices</h6>
           </div>
           <div class="col-3 text-right">
@@ -59,7 +59,15 @@
       <app-card [hidHeader]="true" [isCardFooter]="true" footerClass="bg-c-yellow">
         <div class="row align-items-center">
           <div class="col-8">
-            <h4 class="text-c-yellow">145</h4>
+            <ng-container *ngIf="todaySale===0;else today">
+              <h4 class="text-c-yellow">{{todaySale}}</h4>
+            </ng-container>
+            <ng-template #today>
+              <h4 class="text-c-yellow">$ {{todaySale}}</h4>
+            </ng-template>
+
+
+
             <h6 class="text-muted m-b-0">Today Sales</h6>
           </div>
           <div class="col-4 text-right">
@@ -86,7 +94,15 @@
       >
         <div class="row align-items-center">
           <div class="col-8">
-            <h4 class="text-c-green">500</h4>
+
+
+            <ng-container *ngIf="monthlySale===0;else monthly">
+              <h4 class="text-c-green">{{monthlySale}}</h4>
+            </ng-container>
+            <ng-template #monthly>
+              <h4 class="text-c-green">$ {{monthlySale}}</h4>
+            </ng-template>
+
             <h6 class="text-muted m-b-0">This Month Sales</h6>
           </div>
           <div class="col-4 text-right">
