@@ -8,6 +8,7 @@ import {NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+import { UpdateStockComponent } from './update-stock/update-stock.component';
 
 const materialModules = [
   MatButtonModule,
@@ -16,7 +17,7 @@ const materialModules = [
 
 
 @NgModule({
-  declarations: [CreateOrderHomeComponent],
+  declarations: [CreateOrderHomeComponent, UpdateStockComponent],
   imports: [
     CommonModule,
     CreateOrderRoutingModule,

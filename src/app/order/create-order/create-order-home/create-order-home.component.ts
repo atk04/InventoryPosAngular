@@ -290,7 +290,12 @@ export class CreateOrderHomeComponent implements OnInit {
       this.body = 'Quantity: Quantity must not equal to zero';
       this.onInfo();
     }
-    if (quantity > this.rows.value[index].stock) {
+    if(this.rows.value[index].stock==0){
+      this.title = 'Create Order';
+      this.body = 'Please update your empty product stock first';
+      this.onWarning();
+      return;
+    }else if (quantity > this.rows.value[index].stock) {
       this.title = 'Create Order';
       if (this.rows.value[index].quantity > 1) {
         this.body = 'Quantity: This much of quantity is not available';

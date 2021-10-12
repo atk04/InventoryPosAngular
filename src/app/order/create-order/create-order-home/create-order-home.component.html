@@ -144,13 +144,13 @@
                   </ng-select>
                 </td>
                 <td *ngIf="this.rows.value[index].stock!=0">{{ this.rows.value[index].stock }}</td>
-                <td *ngIf="this.rows.value[index].stock==0"><button
+                <td *ngIf="this.rows.value[index].stock==0"><a
                   mat-raised-button
-                  type="button"
                   mat-raised-button
+                  routerLink="updateProductStock/{{this.rows.value[index].id}}"
                 >
                   Update Stock
-                </button> </td>
+                </a> </td>
                 <td>
                   {{ this.rows.value[index].salePrice | currency: "USD" }}
                 </td>
@@ -181,6 +181,7 @@
 
 
         </div>
+        <pre>{{this.rows.value|json}}</pre>
         <div class="row">
           <div class="col-md-6 m-b-30">
             <label for="subtotal">SubTotal</label>
