@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="Update Stock">
+      <form [formGroup]="productStockFormGroup" (ngSubmit)="onUpdate()">
+        <div class="row">
+          <label for="stock">Stock</label>
+          <div class="col-sm-8">
+            <input
+              id="stock"
+              class="form-control"
+              type="text"
+              placeholder="Enter Stock"
+              formControlName="stock"
+              value="{{ updateProductStock.stock }}"
+            />
+          </div>
+        </div>
+        <div class="row mt-1">
+          <label class="mr-5">&nbsp;</label>
+          <div
+          *ngIf="stock.invalid && (stock.dirty || stock.touched)"
+          class="alert alert-danger form-group"
+        >
+          <div *ngIf="stock.errors.required">Stock Number is Required</div>
+          <div *ngIf="stock.errors.pattern">Only Number are allowed</div>
+        </div>
+        </div>
+
+
+        <div class="row mt-2">
+          <div class="mr-5">&nbsp;</div>
+          <div class="col-auto">
+            <button type="submit" mat-raised-button color="accent">
+              Update
+            </button>
+          </div>
+          <div class="col-auto">
+            <a
+              routerLink="/admin/create-order-page"
+              mat-flat-button
+              color="primary"
+              >Back</a
+            >
+          </div>
+        </div>
+      </form>
+    </app-card>
+  </div>
+</div>
+<div class="row">
+  <ng-snotify></ng-snotify>
+</div>
