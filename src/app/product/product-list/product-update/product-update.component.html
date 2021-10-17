@@ -16,7 +16,8 @@
                 class="form-control"
                 id="productName"
                 placeholder="Enter Product"
-                value="{{Product.name}}"
+                value="{{ Product.name }}"
+                [(ngModel)]="productNameValue"
               />
             </div>
             <div
@@ -36,30 +37,32 @@
               <label for="exampleFormControlSelect1">Category Name</label>
               <select
                 (change)="onChangeCategoryId($event.target.value)"
-                formControlName="productCategoryId"
                 class="form-control"
                 id="exampleFormControlSelect1"
               >
-                <option selected disabled>Select Category</option>
+                <option disabled>Select Category</option>
                 <option
                   *ngFor="let tempProductCategory of productCategories"
                   [value]="tempProductCategory.id"
+                  [selected]="
+                    categoryNameValue == tempProductCategory.categoryName
+                  "
                 >
                   {{ tempProductCategory.categoryName }}
                 </option>
               </select>
             </div>
-            <div
+
+            <!-- <div
               *ngIf="
-                productCategoryId.invalid &&
-                (productCategoryId.dirty || productCategoryId.touched)
+                productCategoryId.invalid && productCategoryId.touched
               "
               class="alert alert-danger form-group"
             >
               <div *ngIf="productCategoryId.errors.required">
                 Please update Category Name
               </div>
-            </div>
+            </div> -->
             <div class="form-group">
               <label for="purchasePrice">Purchase Price</label>
               <div class="input-group">
@@ -69,20 +72,18 @@
                   </span>
                 </div>
                 <input
-                formControlName="purchasePrice"
-                type="text"
-                class="form-control"
-                id="purchasePrice"
-                placeholder="Enter Purchase Price"
-                value="{{Product.purchasePrice}}"
+                  formControlName="purchasePrice"
+                  type="text"
+                  class="form-control"
+                  id="purchasePrice"
+                  placeholder="Enter Purchase Price"
+                  value="{{ Product.purchasePrice }}"
+                  [(ngModel)]="purchasePriceValue"
                 />
               </div>
             </div>
             <div
-              *ngIf="
-                purchasePrice.invalid &&
-                (purchasePrice.dirty || purchasePrice.touched)
-              "
+              *ngIf="purchasePrice.invalid && purchasePrice.touched"
               class="alert alert-danger form-group"
             >
               <div *ngIf="purchasePrice.errors.required">
@@ -101,19 +102,18 @@
                   </span>
                 </div>
                 <input
-                formControlName="salePrice"
-                type="text"
-                class="form-control"
-                id="salePrice"
-                placeholder="Enter Sale Price"
-                value="{{Product.salePrice}}"
+                  formControlName="salePrice"
+                  type="text"
+                  class="form-control"
+                  id="salePrice"
+                  placeholder="Enter Sale Price"
+                  value="{{ Product.salePrice }}"
+                  [(ngModel)]="salePriceValue"
                 />
               </div>
             </div>
             <div
-              *ngIf="
-                salePrice.invalid && (salePrice.dirty || salePrice.touched)
-              "
+              *ngIf="salePrice.invalid && salePrice.touched"
               class="alert alert-danger form-group"
             >
               <div *ngIf="salePrice.errors.required">
@@ -137,14 +137,17 @@
                 class="form-control"
                 id="stock"
                 placeholder="Enter Stock"
-                value="{{Product.stock}}"
+                value="{{ Product.stock }}"
+                [(ngModel)]="stockValue"
               />
             </div>
             <div
-              *ngIf="stock.invalid && (stock.dirty || stock.touched)"
+              *ngIf="stock.invalid && stock.touched"
               class="alert alert-danger form-group"
             >
-              <div *ngIf="stock.errors.required">Please update Stock Number</div>
+              <div *ngIf="stock.errors.required">
+                Please update Stock Number
+              </div>
               <div *ngIf="stock.errors.pattern">Only Number are allowed</div>
             </div>
 
@@ -155,14 +158,12 @@
                 class="form-control"
                 id="description"
                 rows="2"
-                value="{{Product.description}}"
+                value="{{ Product.description }}"
+                [(ngModel)]="descriptionValue"
               ></textarea>
             </div>
             <div
-              *ngIf="
-                description.invalid &&
-                (description.dirty || description.touched)
-              "
+              *ngIf="description.invalid && description.touched"
               class="alert alert-danger form-group"
             >
               <div
@@ -178,37 +179,53 @@
               </div>
             </div>
 
-            <app-image-upload
-              formControlName="productImage"
-              (change)="showPreview($event)"
-            ></app-image-upload>
 
-            <div
-              *ngIf="
-                productImage.invalid &&
-                  (productImage.dirty || productImage.touched);
-                else second
-              "
-              class="alert alert-danger form-group"
-            >
-              <div
-                *ngIf="
-                  productImage.errors.required ||
-                  productImage.errors.requiredFileType
-                "
+
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                (change)="showOrHideProductImage()"
+                id="updateProduct"
+              />
+              <label class="custom-control-label" for="updateProduct"
+                >Update Product Image</label
               >
-                Please update Photo (Only JPG)
-              </div>
             </div>
 
-            <ng-template #second>
-              <img
-                style="width: auto; height: 10em; display: inline-block"
-                [src]="imageURL"
-                [alt]="productFormGroup.value.productImage"
-                src="{{Product.imageUrl}}"
-              />
-            </ng-template>
+            <ng-container *ngIf="showProductImage">
+              <app-image-upload
+                formControlName="productImage"
+                (change)="showPreview($event)"
+              ></app-image-upload>
+
+              <div
+                *ngIf="
+                  productImage.invalid &&
+                    (productImage.dirty || productImage.touched);
+                  else second
+                "
+                class="alert alert-danger form-group"
+              >
+                <div
+                  *ngIf="
+                    productImage.errors.required ||
+                    productImage.errors.requiredFileType
+                  "
+                >
+                  Please update Photo (Only JPG)
+                </div>
+              </div>
+
+              <ng-template #second>
+                <img
+                  style="width: auto; height: 10em; display: inline-block"
+                  [src]="imageURL"
+                  [alt]="productFormGroup.value.productImage"
+                  src="{{ Product.imageUrl }}"
+                />
+              </ng-template>
+            </ng-container>
           </div>
         </div>
       </form>

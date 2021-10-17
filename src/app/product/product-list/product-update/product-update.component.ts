@@ -29,8 +29,6 @@ import { Products } from 'src/app/common/products';
   styleUrls: ['./product-update.component.scss'],
 })
 export class ProductUpdateComponent implements OnInit {
-
-
   //Snotify Message
   style = 'material';
   title = 'Alert Message';
@@ -48,7 +46,6 @@ export class ProductUpdateComponent implements OnInit {
   titleMaxLength = 50;
   bodyMaxLength = 80;
 
-
   productFormGroup: FormGroup;
   //for validation Number or Digit
   numberOrdecimalRegEx = /^[1-9]\d*(\.\d+)?$/;
@@ -61,18 +58,16 @@ export class ProductUpdateComponent implements OnInit {
 
   //for data populate
   Product: ProductList = new ProductList();
-  ProductCategory: ProductCategory=new ProductCategory();
+  ProductCategory: ProductCategory = new ProductCategory();
 
   //for display product category on product add form
   productCategories: ProductCategory[] = [];
 
-
-
-   //for update product
-   ImageFile:ImageData;
-   SelectedCategory: ProductCategory = new ProductCategory();
-   product: Products = new Products();
-   updateProduct: UpdateProduct=new UpdateProduct();
+  //for update product
+  ImageFile: ImageData;
+  SelectedCategory: ProductCategory = new ProductCategory();
+  product: Products = new Products();
+  updateProduct: UpdateProduct = new UpdateProduct();
 
   constructor(
     private route: ActivatedRoute,
@@ -86,14 +81,19 @@ export class ProductUpdateComponent implements OnInit {
   //Image Dispaly on Add Product form
   imageURL: String;
 
-  ngOnInit(): void {
+  productNameValue: String;
+  categoryIdValue: number;
+  categoryNameValue: string;
+  purchasePriceValue: number;
+  salePriceValue: number;
+  stockValue: number;
+  descriptionValue: String;
+  showProductImage: boolean = false;
 
+  ngOnInit(): void {
     this.routeSub = this.route.params.subscribe((params) => {
       this.productId = +params['id'];
-
-
     });
-
 
     this.productFormGroup = this.formBuilder.group({
       name: new FormControl('', [
@@ -101,7 +101,7 @@ export class ProductUpdateComponent implements OnInit {
         Validators.minLength(2),
         InventoryPos.notOnlyWhitespace,
       ]),
-      productCategoryId: new FormControl('', [Validators.required]),
+      //      productCategoryId: new FormControl(this.categoryIdValue, [Validators.required]),
       purchasePrice: new FormControl('', [
         Validators.required,
         Validators.pattern(this.numberOrdecimalRegEx),
@@ -119,16 +119,16 @@ export class ProductUpdateComponent implements OnInit {
         Validators.minLength(2),
         InventoryPos.notOnlyWhitespace,
       ]),
-      productImage: new FormControl('', [
-        Validators.required,
-        UploadFileValidators.requiredFileType('jpg'),
-      ]),
+
+      // productImage: new FormControl('', [
+      //   Validators.required,
+      //   UploadFileValidators.requiredFileType('jpg'),
+      // ]),
+      productImage: new FormControl(''),
     });
     this.listProductCategories();
     this.getProduct();
     this.getCategory();
-
-
   }
   listProductCategories() {
     this.productCategoryService.getProductCategories().subscribe((data) => {
@@ -136,16 +136,14 @@ export class ProductUpdateComponent implements OnInit {
     });
   }
 
-
-
   // Getters for validation
   get Name() {
     return this.productFormGroup.get('name');
   }
 
-  get productCategoryId() {
-    return this.productFormGroup.get('productCategoryId');
-  }
+  // get productCategoryId() {
+  //   return this.productFormGroup.get('productCategoryId');
+  // }
   get purchasePrice() {
     return this.productFormGroup.get('purchasePrice');
   }
@@ -189,10 +187,14 @@ export class ProductUpdateComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-
   getProduct() {
     this.productService.getProductById(this.productId).subscribe((data) => {
       this.Product = data;
+      this.productNameValue = this.Product.name;
+      this.purchasePriceValue = this.Product.purchasePrice;
+      this.salePriceValue = this.Product.salePrice;
+      this.stockValue = this.Product.stock;
+      this.descriptionValue = this.Product.description;
     });
   }
 
@@ -201,9 +203,12 @@ export class ProductUpdateComponent implements OnInit {
       .getCategoryByProductId(this.productId)
       .subscribe((data) => {
         this.ProductCategory = data;
+        this.categoryIdValue = this.ProductCategory.id;
+        this.categoryNameValue = this.ProductCategory.categoryName;
+        this.SelectedCategory.id=this.categoryIdValue;
+        this.SelectedCategory.categoryName=this.categoryNameValue;
       });
   }
-
 
   //Snotify Alert
   getConfig(): SnotifyToastConfig {
@@ -242,13 +247,28 @@ export class ProductUpdateComponent implements OnInit {
     this.snotifyService.warning(this.body, this.title, this.getConfig());
   }
 
+  showOrHideProductImage() {
+    if (this.showProductImage === false) {
+      this.showProductImage = true;
+      this.productFormGroup.controls['productImage'].setValidators([
+        Validators.required,
+        UploadFileValidators.requiredFileType('jpg'),
+      ]);
 
+    } else {
+      this.showProductImage = false;
+      this.productFormGroup.controls['productImage'].clearValidators();
+
+    }
+    this.productFormGroup.controls['productImage'].updateValueAndValidity();
+
+  }
   onUpdate() {
-    if(this.productFormGroup.invalid){
+    if (this.productFormGroup.invalid) {
       this.productFormGroup.markAllAsTouched();
       return;
     }
-this.product.id=+this.Product.id;
+    this.product.id = +this.Product.id;
     this.product.name = this.productFormGroup.controls.name.value;
     this.product.purchasePrice =
       +this.productFormGroup.controls.purchasePrice.value;
@@ -256,33 +276,42 @@ this.product.id=+this.Product.id;
     this.product.stock = +this.productFormGroup.controls.stock.value;
     this.product.description = this.productFormGroup.controls.description.value;
 
-
-
-
     // console.log(this.product.productImage)
-this.ImageFile=this.productFormGroup.controls.productImage.value;
-this.updateProduct.category = this.SelectedCategory;
-this.updateProduct.product = this.product;
+    this.ImageFile = this.productFormGroup.controls.productImage.value;
+    this.updateProduct.category = this.SelectedCategory;
+    this.updateProduct.product = this.product;
 
-var formData: any = new FormData();
-    formData.append("productImage",this.ImageFile)
+    var formData: any = new FormData();
+    formData.append('productImage', this.ImageFile);
 
-    formData.append("updateProductRequest",
-    new Blob([JSON
-      .stringify(this.updateProduct)], {
-      type: 'application/json'
-    }));
+    formData.append(
+      'updateProductRequest',
+      new Blob([JSON.stringify(this.updateProduct)], {
+        type: 'application/json',
+      })
+    );
 
-    this.productApiCallService.updateProduct(formData).subscribe({
-      next: (response) => {
-        this.title = 'Update Success';
-        this.body = 'Product: ' + `${response.message}`;
-        this.onSuccess();
-      },
-    });
 
-console.log("Product Id" +this.product.id)
-console.log("Category Id" +this.SelectedCategory.id)
+    if(this.showProductImage){
+      this.productApiCallService.updateProduct(formData).subscribe({
+        next: (response) => {
+          this.title = 'Update Success';
+          this.body = 'Product: ' + `${response.message}`;
+          this.onSuccess();
+        },
+      });
+    }else{
+this.productApiCallService.updateProductWithoutImage(this.updateProduct).subscribe({
+  next: (response) => {
+    this.title = 'Update Success';
+    this.body = 'Product: ' + `${response.message}`;
+    this.onSuccess();
+  },
+});
+    }
+
+
+
 
   }
 }
