@@ -14,11 +14,12 @@
                   placeholder="Enter Name"
                   formControlName="Name"
                   value="{{ company.name }}"
+                  [(ngModel)]="companyNameValue"
                 />
 
                 <div
                   class="row"
-                  *ngIf="Name.invalid && (Name.dirty || Name.touched)"
+                  *ngIf="Name.invalid && Name.touched"
                   class="alert alert-danger mt-1"
                 >
                   <div
@@ -46,11 +47,12 @@
                   placeholder="Enter Company Address"
                   formControlName="Address"
                   value="{{ company.address }}"
+                  [(ngModel)]="companyAddressValue"
                 />
 
                 <div
                   class="row"
-                  *ngIf="Address.invalid && (Address.dirty || Address.touched)"
+                  *ngIf="Address.invalid && Address.touched"
                   class="alert alert-danger mt-1"
                 >
                   <div
@@ -79,10 +81,11 @@
                   placeholder="Enter Phone Number "
                   formControlName="Phone"
                   value="{{ company.phoneNumber }}"
+                  [(ngModel)]="companyPhoneNumberValue"
                 />
                 <div
                   class="row"
-                  *ngIf="Phone.invalid && (Phone.dirty || Phone.touched)"
+                  *ngIf="Phone.invalid && Phone.touched"
                   class="alert alert-danger mt-1"
                 >
                   <div
@@ -110,10 +113,11 @@
                   placeholder="Enter email address "
                   formControlName="Email"
                   value="{{ company.emailAddress }}"
+                  [(ngModel)]="companyEmailAddressValue"
                 />
                 <div
                   class="row"
-                  *ngIf="Email.invalid && (Email.dirty || Email.touched)"
+                  *ngIf="Email.invalid && Email.touched"
                   class="alert alert-danger mt-1"
                 >
                   <div
@@ -141,11 +145,12 @@
                   placeholder="Enter website address "
                   formControlName="Website"
                   value="{{ company.websiteAddress }}"
+                  [(ngModel)]="companyWebsiteValue"
                 />
 
                 <div
                   class="row"
-                  *ngIf="Website.invalid && (Website.dirty || Website.touched)"
+                  *ngIf="Website.invalid && Website.touched"
                   class="alert alert-danger mt-1"
                 >
                   <div

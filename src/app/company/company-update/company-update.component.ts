@@ -52,6 +52,12 @@ export class CompanyUpdateComponent implements OnInit {
   ) {}
   companyFormGroup: FormGroup;
   private currentCompanyId: number = 1;
+
+  companyNameValue:string;
+  companyAddressValue:string;
+  companyPhoneNumberValue:string;
+  companyEmailAddressValue:string;
+  companyWebsiteValue:string;
   ngOnInit(): void {
     //validate url id is number or not
     this.routeSub = this.route.params.subscribe((params) => {
@@ -69,6 +75,11 @@ export class CompanyUpdateComponent implements OnInit {
         this.company.phoneNumber = response['phoneNumber'];
         this.company.emailAddress = response['emailAddress'];
         this.company.websiteAddress = response['websiteAddress'];
+        this.companyNameValue=this.company.name;
+        this.companyAddressValue=this.company.address;
+        this.companyPhoneNumberValue=this.company.phoneNumber;
+        this.companyEmailAddressValue=this.company.emailAddress;
+        this.companyWebsiteValue=this.company.websiteAddress;
       },
       error: (err) => {
         this.router.navigate(['/', 'company-page']);
@@ -167,10 +178,12 @@ export class CompanyUpdateComponent implements OnInit {
   }
 
   onUpdate() {
+    if (this.companyFormGroup.touched) {
     if (this.companyFormGroup.invalid) {
       this.companyFormGroup.markAllAsTouched();
       return;
     }
+  }
 
     this.company.name = this.companyFormGroup.controls['Name'].value;
     this.company.address = this.companyFormGroup.controls['Address'].value;
