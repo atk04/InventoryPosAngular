@@ -44,7 +44,7 @@ export class PrintOrderComponent implements OnInit {
 
           this.customerName = this.orderList[0].invoice.customerName;
           this.invoiceNo = this.orderList[0].invoice.id;
-          this.orderDate = this.orderList[0].orderDate;
+          this.orderDate =convert(this.orderList[0].orderDate);
           for (let i = 0; i < this.orderList.length; i++) {
             this.productItem.productName = this.orderList[i].productName;
             this.productItem.productQuantity =
@@ -77,4 +77,11 @@ export class PrintOrderComponent implements OnInit {
         this.selectCompany.websiteAddress = data.websiteAddress;
       });
   }
+}
+
+function convert(str) {
+  var date = new Date(str),
+    mnth = ('0' + (date.getMonth() + 1)).slice(-2),
+    day = ('0' + date.getDate()).slice(-2);
+  return [date.getFullYear(), mnth, day].join('-');
 }
