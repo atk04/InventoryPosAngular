@@ -54,6 +54,7 @@ export class CategoryUpdateComponent implements OnInit {
 
   categoryFormGroup: FormGroup;
 
+  categoryNameValue:string;
   ngOnInit(): void {
     //validate url id is number or not
     this.routeSub = this.route.params.subscribe((params) => {
@@ -71,6 +72,7 @@ export class CategoryUpdateComponent implements OnInit {
           // console.log(this.productCategory);
           this.productCategory.id = +response['id'];
           this.productCategory.categoryName = response['categoryName'];
+          this.categoryNameValue=this.productCategory.categoryName;
         },
         error: (err) => {
           this.router.navigate(['/', 'category-page']);
@@ -130,10 +132,13 @@ export class CategoryUpdateComponent implements OnInit {
   }
 
   onUpdate() {
-    if (this.categoryFormGroup.invalid) {
-      this.categoryFormGroup.markAllAsTouched();
-      return;
+    if(this.categoryFormGroup.touched){
+      if (this.categoryFormGroup.invalid) {
+        this.categoryFormGroup.markAllAsTouched();
+        return;
+      }
     }
+
 
     this.productCategory.categoryName =
       this.categoryFormGroup.controls['categoryName'].value;

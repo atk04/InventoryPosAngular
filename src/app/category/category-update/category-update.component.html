@@ -14,13 +14,14 @@
                   placeholder="Enter Category"
                   formControlName="categoryName"
                   value="{{ productCategory.categoryName }}"
+                  [(ngModel)]="categoryNameValue"
                 />
 
                 <div
                   class="row"
                   *ngIf="
-                    categoryName.invalid &&
-                    (categoryName.dirty || categoryName.touched)
+                    categoryName.invalid && categoryName.touched
+
                   "
                   class="alert alert-danger mt-1"
                 >
