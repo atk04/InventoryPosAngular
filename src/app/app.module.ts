@@ -30,6 +30,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { NgwWowModule } from 'ngx-wow';
 import { OAuthModule } from 'angular-oauth2-oidc';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +62,8 @@ import { OAuthModule } from 'angular-oauth2-oidc';
     HttpClientModule,
     ReactiveFormsModule,
     NgwWowModule,
-    OAuthModule.forRoot()
+    OAuthModule.forRoot(),
+
   ],
   providers: [NavigationItem],
   bootstrap: [AppComponent]

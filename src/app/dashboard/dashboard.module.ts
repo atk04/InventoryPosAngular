@@ -13,6 +13,7 @@ import { SharedModule } from '../theme/shared/shared.module';
     CommonModule,
     DashboardRoutingModule,
     SharedModule,
+
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
 })

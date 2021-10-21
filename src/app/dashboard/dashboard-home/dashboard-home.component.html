@@ -9,7 +9,7 @@
       >
         <div class="row align-items-center">
           <div class="col-8">
-            <h4 class="text-c-yellow">{{todayInvoiceCount}}</h4>
+            <h4 class="text-c-yellow">{{ todayInvoiceCount }}</h4>
             <h6 class="text-muted m-b-0">Today Invoices</h6>
           </div>
           <div class="col-4 text-right">
@@ -36,7 +36,7 @@
       >
         <div class="row align-items-center">
           <div class="col-9">
-            <h4 class="text-c-green">{{curentdayOfMonthInvoiceCount}}</h4>
+            <h4 class="text-c-green">{{ curentdayOfMonthInvoiceCount }}</h4>
             <h6 class="text-muted m-b-0">This Month Invoices</h6>
           </div>
           <div class="col-3 text-right">
@@ -56,17 +56,19 @@
       </app-card>
     </div>
     <div class="col-sm-3">
-      <app-card [hidHeader]="true" [isCardFooter]="true" footerClass="bg-c-yellow">
+      <app-card
+        [hidHeader]="true"
+        [isCardFooter]="true"
+        footerClass="bg-c-yellow"
+      >
         <div class="row align-items-center">
           <div class="col-8">
-            <ng-container *ngIf="todaySale===0;else today">
-              <h4 class="text-c-yellow">{{todaySale}}</h4>
+            <ng-container *ngIf="todaySale === 0; else today">
+              <h4 class="text-c-yellow">{{ todaySale }}</h4>
             </ng-container>
             <ng-template #today>
-              <h4 class="text-c-yellow">$ {{todaySale}}</h4>
+              <h4 class="text-c-yellow">$ {{ todaySale }}</h4>
             </ng-template>
-
-
 
             <h6 class="text-muted m-b-0">Today Sales</h6>
           </div>
@@ -94,13 +96,11 @@
       >
         <div class="row align-items-center">
           <div class="col-8">
-
-
-            <ng-container *ngIf="monthlySale===0;else monthly">
-              <h4 class="text-c-green">{{monthlySale}}</h4>
+            <ng-container *ngIf="monthlySale === 0; else monthly">
+              <h4 class="text-c-green">{{ monthlySale }}</h4>
             </ng-container>
             <ng-template #monthly>
-              <h4 class="text-c-green">$ {{monthlySale}}</h4>
+              <h4 class="text-c-green">$ {{ monthlySale }}</h4>
             </ng-template>
 
             <h6 class="text-muted m-b-0">This Month Sales</h6>
@@ -122,5 +122,73 @@
       </app-card>
     </div>
     <!-- page statistic card end -->
+  </div>
+  <div class="col-sm-12" style="padding-left:2em; padding-right:2em">
+    <div class="row">
+      <div class="col-sm-8">
+
+        <app-card [hidHeader]="true">
+        <h5>GRAPHICAL PRESENTATION OF INVOICES AND SALES DONE IN LAST DAYS</h5>
+
+        <canvas style="display: block;" id="myChart" width="200" height="200"></canvas>
+        </app-card>
+      </div>
+      <div class="col-sm-4">
+
+
+
+
+        <app-card [hidHeader]="true">
+          <h5>RECENT BUYERS</h5>
+       <ng-container style="display: block;" *ngIf="recentBuyer.length!=0;else second">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+  <tbody>
+    <tr *ngFor="let buyer of recentBuyer">
+      <td>
+
+        <div class="d-inline-block align-middle">
+          <img src="assets/images/buyer.png" alt="user image" class="img-radius wid-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>{{buyer.customerName}}</h6>
+            <ng-container *ngIf="buyer.due==0;else secondLabel">
+              <label class="badge badge-light-success">Paid</label>
+            </ng-container>
+            <ng-template #secondLabel>
+              <label class="badge badge-light-danger">Due</label>
+            </ng-template>
+
+
+          </div>
+        </div>
+      </td>
+
+      <td class="text-right">
+        <ng-container *ngIf="buyer.due==0;else secondAmount">
+        <h4>$ {{buyer.paid}}</h4>
+        </ng-container>
+        <ng-template #secondAmount>
+        <h4>$ {{buyer.due}}</h4>
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+       </ng-container>
+       <ng-template #second style="display: block;">
+        <span>There is no recent buyer.</span>
+       </ng-template>
+
+
+
+
+          </app-card>
+
+
+
+      </div>
+    </div>
+
   </div>
 </div>

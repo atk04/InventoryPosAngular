@@ -12,6 +12,7 @@ export class InvoiceDetailApiCallService {
   createInvoiceDetailUrl =
     'http://localhost:8080/api/order/createInvoiceDetail';
   getInvoiceDetailUrl = 'http://localhost:8080/api/order/findAllByInvoiceId';
+  getRecentBuyerUrl='http://localhost:8080/api/order/getRecentBuyer';
   deleteInvoiceDetailByInvoiceIdUrl = 'http://localhost:8080/api/order/deleteInvoiceDetail';
   deleteInvoiceByIdUrl = 'http://localhost:8080/api/order/delete';
   constructor(private httpClient: HttpClient) {}
@@ -28,6 +29,10 @@ export class InvoiceDetailApiCallService {
   getInvoiceDetailById(id: number): Observable<GetInvoiceDetailResponse[]> {
     const searchUrl = `${this.getInvoiceDetailUrl}?id=${id}`;
     return this.httpClient.get<GetInvoiceDetailResponse[]>(searchUrl);
+  }
+
+  getRecentBuyer():Observable<OrderInvoiceList[]>{
+    return this.httpClient.get<OrderInvoiceList[]>(this.getRecentBuyerUrl);
   }
 
   deleteInvoiceDetailByInvoiceId(id: number): Observable<any> {
