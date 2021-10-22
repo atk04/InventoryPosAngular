@@ -666,12 +666,13 @@ export class OrderUpdateComponent implements OnInit {
               this.onSuccess();
             }
             setTimeout(() => {
-              this.router.navigate(['/', 'order-list-page']);
+
+              this.router.navigate(['/admin/', 'order-list-page']);
             }, 2500);
           });
       });
 
-    //this.router.navigate(['order-list-page'],{relativeTo:this.activatedRoute});
+
   }
 }
 
