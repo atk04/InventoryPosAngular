@@ -6,6 +6,19 @@ img{
   margin-right: auto;
 
 }
-.table thead th{
-  background-color: lightgreen ;
+
+table td{
+  height: 0.5em !important;
+}
+table tr{
+  height: 20px !important;
+}
+table{
+  width: 600px;
+  margin:1em auto;
+
+}
+
+table td{
+  font-weight: bold;
 }

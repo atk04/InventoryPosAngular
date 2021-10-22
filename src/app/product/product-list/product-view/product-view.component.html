@@ -2,99 +2,110 @@
   <div class="col-sm-12">
     <app-card cardTitle="View Product">
       <div class="row">
-        <div class="col-md-6">
+        <div class="container">
+          <div class="table-responsive">
+            <img class="image-responsive" [src]="Product.imageUrl" />
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="container">
           <div class="table-responsive">
             <table class="table table-hover mb-0">
               <thead>
-                <tr class="text-center">
+                <tr>
                   <th colspan="4">Product Detail</th>
                 </tr>
               </thead>
 
               <tbody>
                 <tr>
-                  <td colspan="3">
+                  <td>
                     <div class="d-inline-block align-middle">
                       <div class="d-inline-block">
                         <h6>ID</h6>
                       </div>
                     </div>
                   </td>
-                  <td class="text-right">
-                    <label class="badge badge-light-danger">{{
-                      Product.id
-                    }}</label>
+                  <td >
+
+                      {{
+                        Product.id
+                      }}
+
+
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="3">
+                  <td>
                     <div class="d-inline-block align-middle">
                       <div class="d-inline-block">
                         <h6>Product Name</h6>
                       </div>
                     </div>
                   </td>
-                  <td class="text-right">
-                    <label class="badge badge-light-primary">{{
+                  <td >
+                    {{
                       Product.name
-                    }}</label>
+                    }}
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="3">
+                  <td>
                     <div class="d-inline-block align-middle">
                       <div class="d-inline-block">
                         <h6>Category</h6>
                       </div>
                     </div>
                   </td>
-                  <td class="text-right">
-                    <label class="badge badge-light-success">{{
+                  <td >
+                    {{
                       ProductCategory.categoryName
-                    }}</label>
+                    }}
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="3">
+                  <td>
                     <div class="d-inline-block align-middle">
                       <div class="d-inline-block">
                         <h6>Purchase Price</h6>
                       </div>
                     </div>
                   </td>
-                  <td class="text-right">
-                    <label class="badge badge-light-warning">{{
-                      Product.purchasePrice|currency:'USD': 'symbol' : '1.0-0'
-                    }}</label>
+                  <td >
+                    {{
+                      Product.purchasePrice | currency: "USD":"symbol":"1.0-0"
+                    }}
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="3">
+                  <td >
                     <div class="d-inline-block align-middle">
                       <div class="d-inline-block">
                         <h6>Sale Price</h6>
                       </div>
                     </div>
                   </td>
-                  <td class="text-right">
-                    <label class="badge badge-light-warning">{{
-                      Product.salePrice|currency:'USD': 'symbol' : '1.0-0'
-                    }}</label>
+                  <td >
+                    {{
+                      Product.salePrice | currency: "USD":"symbol":"1.0-0"
+                    }}
                   </td>
                 </tr>
 
                 <tr>
-                  <td colspan="3">
+                  <td>
                     <div class="d-inline-block align-middle">
                       <div class="d-inline-block">
                         <h6>Stock</h6>
                       </div>
                     </div>
                   </td>
-                  <td class="text-right">
-                    <label class="badge badge-light-danger">{{
+                  <td>
+                    {{
                       Product.stock
-                    }}</label>
+                    }}
                   </td>
                 </tr>
 
@@ -114,21 +125,7 @@
             </table>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead>
-                <tr class="text-center">
-                  <th colspan="4">Product Image</th>
-                </tr>
-              </thead>
 
-              <tbody>
-                <img [src]="Product.imageUrl" />
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </app-card>
   </div>

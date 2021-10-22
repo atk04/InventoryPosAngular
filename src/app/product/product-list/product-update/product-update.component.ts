@@ -299,6 +299,11 @@ export class ProductUpdateComponent implements OnInit {
           this.body = 'Product: ' + `${response.message}`;
           this.onSuccess();
         },
+        error:(err)=>{
+          this.title = 'Update Error';
+          this.body = 'Product: ' + `${err}`;
+          this.onError();
+        }
       });
     }else{
 this.productApiCallService.updateProductWithoutImage(this.updateProduct).subscribe({
