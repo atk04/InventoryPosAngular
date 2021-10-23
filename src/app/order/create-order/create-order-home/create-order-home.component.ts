@@ -590,14 +590,14 @@ export class CreateOrderHomeComponent implements OnInit {
 
       this.invoiceService.getInvoiceByInvoiceId(this.invoiceId).subscribe((data)=>{
 
-        let savedInvoiceId=+data.id;
+        let savedInvoiceId = +data.id;
+        let customerName=data.customerName;
         if(this.invoiceId==savedInvoiceId){
-          this.title = 'Create Order';
-          this.body = 'Name: '+data.customerName;
-          this.onSuccess();
-          setTimeout(() => {
-            this.router.navigate(['/', 'order-list-page']);
-            },2500);
+          if(this.invoiceId==savedInvoiceId){
+            this.router.navigate(['/admin/', 'order-list-page'],{queryParams:{createSuccess:'true',name:customerName}});
+            }else{
+              this.router.navigate(['/admin/', 'order-list-page'],{queryParams:{createSuccess:'false',name:customerName}});
+            }
         }
       })
 

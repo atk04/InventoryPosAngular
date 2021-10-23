@@ -80,6 +80,22 @@ this.route.queryParams.subscribe(params=>{
                 this.onError();
               }, 1500);
   }
+
+  if(params.createSuccess=="true"){
+    this.title = 'Create Order';
+                this.body = 'Name: ' + params.name;
+                setTimeout(() => {
+                  this.onSuccess();
+                }, 1500);
+
+    }
+    if(params.createSuccess=="false"){
+      this.title = 'Create Order Fail';
+                this.body = 'Name: ' + params.name;
+                setTimeout(() => {
+                  this.onError();
+                }, 1500);
+    }
 })
     this.OrderListByIdDesc();
   }
