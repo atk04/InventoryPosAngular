@@ -638,7 +638,7 @@ export class OrderUpdateComponent implements OnInit {
             .getProductById(this.rows.value[i].id)
             .subscribe((data) => {
               this.productId = +data.id;
-              console.log('Product Id = ' + this.productId);
+             // console.log('Product Id = ' + this.productId);
               this.invoiceDetailItem.productName = data.name;
               this.invoiceDetailItem.productPrice = data.salePrice;
               this.invoiceDetailItem.productQuantity =
@@ -660,15 +660,12 @@ export class OrderUpdateComponent implements OnInit {
           .getInvoiceByInvoiceId(this.invoiceId)
           .subscribe((data) => {
             let savedInvoiceId = +data.id;
-            if (this.invoiceId == savedInvoiceId) {
-              this.title = 'Update Order';
-              this.body = 'Name: ' + data.customerName;
-              this.onSuccess();
+            let customerName=data.customerName;
+            if(this.invoiceId==savedInvoiceId){
+            this.router.navigate(['/admin/', 'order-list-page'],{queryParams:{updateSuccess:'true',name:customerName}});
+            }else{
+              this.router.navigate(['/admin/', 'order-list-page'],{queryParams:{updateSuccess:'false',name:customerName}});
             }
-            setTimeout(() => {
-
-              this.router.navigate(['/admin/', 'order-list-page']);
-            }, 2500);
           });
       });
 

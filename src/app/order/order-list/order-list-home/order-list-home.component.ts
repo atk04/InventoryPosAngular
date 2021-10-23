@@ -9,6 +9,7 @@ import {
   SnotifyService,
   SnotifyToastConfig,
 } from 'ng-snotify';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-order-list-home',
   templateUrl: './order-list-home.component.html',
@@ -58,11 +59,28 @@ export class OrderListHomeComponent implements OnInit {
 
   constructor(private invoiceApiCallService: InvoiceApicallService,
     private invoiceDetailApiCallService:InvoiceDetailApiCallService,
-    private snotifyService: SnotifyService) {}
+    private snotifyService: SnotifyService,private route: ActivatedRoute) {}
 
   //orderList for display
   orderList: SaveInvoice[] = [];
   ngOnInit(): void {
+this.route.queryParams.subscribe(params=>{
+  if(params.updateSuccess=="true"){
+  this.title = 'Update Order';
+              this.body = 'Name: ' + params.name;
+              setTimeout(() => {
+                this.onSuccess();
+              }, 1500);
+
+  }
+  if(params.updateSuccess=="false"){
+    this.title = 'Update Order Fail';
+              this.body = 'Name: ' + params.name;
+              setTimeout(() => {
+                this.onError();
+              }, 1500);
+  }
+})
     this.OrderListByIdDesc();
   }
   OrderListByIdDesc() {
