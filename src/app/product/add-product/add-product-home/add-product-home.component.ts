@@ -25,7 +25,7 @@ import { UploadFileValidators } from 'src/app/validators/upload-file-validators'
 })
 export class AddProductHomeComponent implements OnInit {
 
-  ImageFile:ImageData;
+  //ImageFile:ImageData;
 
 
 
@@ -92,9 +92,9 @@ export class AddProductHomeComponent implements OnInit {
         Validators.minLength(2),
         InventoryPos.notOnlyWhitespace,
       ]),
-      productImage:new FormControl('',[
-        Validators.required,
-        UploadFileValidators.requiredFileType('jpg')])
+      // productImage:new FormControl('',[
+      //   Validators.required,
+      //   UploadFileValidators.requiredFileType('jpg')])
     });
     this.listProductCategories();
   }
@@ -126,9 +126,9 @@ export class AddProductHomeComponent implements OnInit {
     return this.productFormGroup.get('description');
   }
 
-  get productImage(){
-    return this.productFormGroup.get('productImage');
-  }
+  // get productImage(){
+  //   return this.productFormGroup.get('productImage');
+  // }
   onChangeCategoryId(categoryId: number) {
     this.productCategoryService
       .getProductCategoryById(categoryId)
@@ -218,12 +218,12 @@ export class AddProductHomeComponent implements OnInit {
     this.product.description = this.productFormGroup.controls.description.value;
 
    // console.log(this.product.productImage)
-this.ImageFile=this.productFormGroup.controls.productImage.value;
+//this.ImageFile=this.productFormGroup.controls.productImage.value;
     this.addProduct.category = this.SelectedCategory;
     this.addProduct.product = this.product;
 
     var formData: any = new FormData();
-    formData.append("productImage",this.ImageFile)
+   // formData.append("productImage",this.ImageFile)
 
     formData.append("createProductRequest",
     new Blob([JSON
